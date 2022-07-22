@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 class {{ class }} extends Controller
 {
     /**
+     * Run this function on load
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
