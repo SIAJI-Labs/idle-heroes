@@ -39,7 +39,13 @@ class ViewSystemServiceProvider extends ServiceProvider
                             'icon' => '<i class="fa-solid fa-house"></i>',
                             'active_key' => 'dashboard',
                             'submenu' => null,
-                        ],
+                        ], [
+                            'name' => 'Association',
+                            'route' => route('s.association.index'),
+                            'icon' => '<i class="fa-solid fa-network-wired"></i>',
+                            'active_key' => 'association',
+                            'submenu' => null,
+                        ], 
                     ],
                 ], [
                     'name' => 'Developer',

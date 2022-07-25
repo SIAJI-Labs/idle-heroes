@@ -43,4 +43,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Primary Key Relation
+     * 
+     * @return model
+     */
+    public function association()
+    {
+        return $this->hasMany(\App\Models\Association::class, 'user_id');
+    }
+
+    /**
+     * Foreign Key Relation
+     * 
+     * @return model
+     */
 }
