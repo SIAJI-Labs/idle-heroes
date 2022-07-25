@@ -1,7 +1,26 @@
 html, body {
   font-family: "Open Sans", sans-serif !important;
 }
-
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.siaji-dashboard-kit [data-animate=spin] {
+  -webkit-animation: spin 1.5s linear infinite;
+          animation: spin 1.5s linear infinite;
+}
 .siaji-dashboard-kit .footer {
   bottom: 0;
   padding: 20px 10px;

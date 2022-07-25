@@ -7,12 +7,14 @@ use Illuminate\Http\Request;
 
 class AssociationController extends Controller
 {
+    protected $associationModel;
+
     /**
      * Run this function on load
      */
     public function __construct()
     {
-        //
+        $this->associationModel = new \App\Models\Association();
     }
 
     /**
@@ -43,7 +45,21 @@ class AssociationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string', 'max:191']
+        ]);
+
+        \DB::transaction(function () use ($request) {
+            $data = $this->associationModel;
+            $data->user_id = \Auth::user()->id;
+            $data->name = $request->name;
+            $data->save();
+        });
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Data Stored'
+        ]);
     }
 
     /**
@@ -54,7 +70,13 @@ class AssociationController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = $this->associationModel->where(\DB::raw('BINARY `uuid`'), $id)
+            ->where('user_id', \Auth::user()->id)
+            ->firstOrFail();
+
+        return view('content.system.association.show', [
+            'data' => $data
+        ]);
     }
 
     /**
@@ -89,5 +111,37 @@ class AssociationController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * 
+     */
+    public function jsonList(Request $request)
+    {
+        $data_limit = $request->limit ?? 10;
+
+        $data = $this->associationModel->query()
+            ->where('user_id', \Auth::user()->id);
+        $last_page = null;
+        if ($request->has('search') && $request->search != '') {
+            // Apply search param
+            $data = $data->where('name', 'like', '%'.$request->search.'%');
+        }
+
+        if ($request->has('page')) {
+            // If request has page parameter, add paginate to eloquent
+            $data->paginate($data_limit);
+            // Get last page
+            $last_page = $data
+                ->paginate($data_limit)
+                ->lastPage();
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data Fetched',
+            'last_page' => $last_page,
+            'data' => $data->orderBy('name', 'asc')->get(),
+        ]);
     }
 }

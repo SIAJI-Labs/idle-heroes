@@ -24,6 +24,20 @@ Route::group([
         'index', 'store', 'update', 'show'
     ]);
 
+    // Guild
+    Route::resource('guild', \App\Http\Controllers\System\GuildController::class)->only([
+        'index', 'store', 'update', 'show'
+    ]);
+
     // Log Viewer
     Route::get('log-viewer', \App\Http\Controllers\System\LogViewerController::class)->name('log-viewer.index');
+
+    // JSON
+    Route::group([
+        'prefix' => 'json',
+        'as' => 'json.'
+    ], function(){
+        // Association
+        Route::get('association', [\App\Http\Controllers\System\AssociationController::class, 'jsonList'])->name('association.list');
+    });
 });

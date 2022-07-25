@@ -42,8 +42,14 @@ class ViewSystemServiceProvider extends ServiceProvider
                         ], [
                             'name' => 'Association',
                             'route' => route('s.association.index'),
-                            'icon' => '<i class="fa-solid fa-network-wired"></i>',
+                            'icon' => '<i class="fa-solid fa-house-flag"></i>',
                             'active_key' => 'association',
+                            'submenu' => null,
+                        ], [
+                            'name' => 'Guild',
+                            'route' => route('s.guild.index'),
+                            'icon' => '<i class="fa-solid fa-house-user"></i>',
+                            'active_key' => 'guild',
                             'submenu' => null,
                         ], 
                     ],

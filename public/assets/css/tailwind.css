@@ -515,6 +515,10 @@ video {
   margin-left: auto !important;
   margin-right: auto !important;
 }
+.tw__my-4 {
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+}
 .tw__mb-4 {
   margin-bottom: 1rem !important;
 }
@@ -544,6 +548,54 @@ video {
 }
 .tw__mr-4 {
   margin-right: 1rem !important;
+}
+.tw__mb-0 {
+  margin-bottom: 0px !important;
+}
+.tw__mr-2 {
+  margin-right: 0.5rem !important;
+}
+.tw__mb-0 {
+  margin-bottom: 0px !important;
+}
+.tw__mr-2 {
+  margin-right: 0.5rem !important;
+}
+.tw__mb-0 {
+  margin-bottom: 0px !important;
+}
+.tw__mr-2 {
+  margin-right: 0.5rem !important;
+}
+.tw__mb-0 {
+  margin-bottom: 0px !important;
+}
+.tw__mr-2 {
+  margin-right: 0.5rem !important;
+}
+.tw__mb-0 {
+  margin-bottom: 0px !important;
+}
+.tw__mr-2 {
+  margin-right: 0.5rem !important;
+}
+.tw__mb-0 {
+  margin-bottom: 0px !important;
+}
+.tw__mr-auto {
+  margin-right: auto !important;
+}
+.tw__mr-2 {
+  margin-right: 0.5rem !important;
+}
+.tw__mb-0 {
+  margin-bottom: 0px !important;
+}
+.tw__mr-auto {
+  margin-right: auto !important;
+}
+.tw__mr-2 {
+  margin-right: 0.5rem !important;
 }
 .tw__block {
   display: block !important;
@@ -587,6 +639,9 @@ video {
 .tw__items-center {
   align-items: center !important;
 }
+.tw__items-baseline {
+  align-items: baseline !important;
+}
 .tw__justify-center {
   justify-content: center !important;
 }
@@ -595,6 +650,9 @@ video {
 }
 .tw__gap-2 {
   gap: 0.5rem !important;
+}
+.tw__gap-1 {
+  gap: 0.25rem !important;
 }
 .tw__overflow-hidden {
   overflow: hidden !important;
@@ -611,6 +669,9 @@ video {
 .tw__rounded {
   border-radius: 0.25rem !important;
 }
+.tw__rounded-lg {
+  border-radius: 0.5rem !important;
+}
 .tw__rounded-t-xl {
   border-top-left-radius: 0.75rem !important;
   border-top-right-radius: 0.75rem !important;
@@ -618,6 +679,9 @@ video {
 .tw__rounded-b-xl {
   border-bottom-right-radius: 0.75rem !important;
   border-bottom-left-radius: 0.75rem !important;
+}
+.tw__border-b {
+  border-bottom-width: 1px !important;
 }
 .tw__bg-transparent {
   background-color: transparent !important;
@@ -634,8 +698,19 @@ video {
   --tw-bg-opacity: 1 !important;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity)) !important;
 }
+.tw__bg-gray-50 {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity)) !important;
+}
+.tw__bg-gray-100 {
+  --tw-bg-opacity: 1 !important;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity)) !important;
+}
 .tw__p-2 {
   padding: 0.5rem !important;
+}
+.tw__p-4 {
+  padding: 1rem !important;
 }
 .tw__px-8 {
   padding-left: 2rem !important;
@@ -644,6 +719,10 @@ video {
 .tw__py-1 {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
+}
+.tw__py-4 {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
 }
 .tw__pt-\[60px\] {
   padding-top: 60px !important;
@@ -664,8 +743,18 @@ video {
   font-size: 1.875rem !important;
   line-height: 2.25rem !important;
 }
+.tw__text-xs {
+  font-size: 0.75rem !important;
+  line-height: 1rem !important;
+}
+.tw__font-bold {
+  font-weight: 700 !important;
+}
 .tw__uppercase {
   text-transform: uppercase !important;
+}
+.tw__italic {
+  font-style: italic !important;
 }
 .tw__leading-none {
   line-height: 1 !important;
@@ -674,10 +763,29 @@ video {
   --tw-text-opacity: 1 !important;
   color: rgb(255 255 255 / var(--tw-text-opacity)) !important;
 }
+.tw__text-yellow-400 {
+  --tw-text-opacity: 1 !important;
+  color: rgb(250 204 21 / var(--tw-text-opacity)) !important;
+}
 .tw__shadow {
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important;
   --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color) !important;
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+}
+.first\:tw__mt-0:first-child {
+  margin-top: 0px !important;
+}
+.first\:tw__pt-0:first-child {
+  padding-top: 0px !important;
+}
+.last\:tw__mb-0:last-child {
+  margin-bottom: 0px !important;
+}
+.last\:tw__border-b-0:last-child {
+  border-bottom-width: 0px !important;
+}
+.last\:tw__pb-0:last-child {
+  padding-bottom: 0px !important;
 }
 @media (min-width: 768px) {
 
