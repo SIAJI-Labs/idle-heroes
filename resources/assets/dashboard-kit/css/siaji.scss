@@ -1,0 +1,18 @@
+html, body {
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+.siaji-dashboard-kit {
+    // Footer
+    .footer {
+        bottom: 0;
+        padding: 20px calc(20px / 2);
+        position: absolute;
+        right: 0;
+        color: #000;
+        left: 0;
+        height: 60px;
+        background-color: #fff;
+        border-top: 1px solid #f1f1f1;
+    }
+}

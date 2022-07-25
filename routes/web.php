@@ -13,6 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group([
+    'as' => 'public.'
+], function(){
+    // Homepage
+    Route::get('/', \App\Http\Controllers\HomeController::class)->name('index');
 });
+
+Auth::routes([
+    'register' => false
+]);
