@@ -172,6 +172,7 @@
         @endif
 
         <!-- Axios -->
+        @include('layouts.plugins.axios.js')
 
         <!-- Moment -->
         <script src="{{ mix('assets/plugins/moment/moment.js') }}"></script>
