@@ -25,6 +25,8 @@ mix.js('node_modules/bootstrap/dist/js/bootstrap.bundle.js', 'public/assets/plug
 /**
  * Plugins
  */
+// Axios
+mix.copy('node_modules/axios/dist/axios.js', 'public/assets/plugins/axios').version();
 // Moment
 mix.js('resources/assets/plugins/moment-js/moment.js', 'public/assets/plugins/moment').version();
 
