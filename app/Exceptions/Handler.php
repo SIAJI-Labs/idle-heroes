@@ -2,31 +2,23 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
     /**
-     * A list of exception types with their corresponding custom log levels.
-     *
-     * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
-     */
-    protected $levels = [
-        //
-    ];
-
-    /**
      * A list of the exception types that are not reported.
      *
-     * @var array<int, class-string<\Throwable>>
+     * @var array<int, class-string<Throwable>>
      */
     protected $dontReport = [
         //
     ];
 
     /**
-     * A list of the inputs that are never flashed to the session on validation exceptions.
+     * A list of the inputs that are never flashed for validation exceptions.
      *
      * @var array<int, string>
      */
@@ -46,5 +38,35 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Convert an authentication exception into a response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Auth\AuthenticationException  $exception
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        $domain = $request->getHost();
+        $url = preg_replace('(^https?://)', '', url()->current());
+
+        \Log::debug("[System] Check Unauthenticated Handler Method ~ App\Exceptions\Handler@unauthenticated", [
+            'domain' => $domain,
+            'url' => $url,
+        ]);
+
+        if ($request->expectsJson()) {
+            return response()->json(['message' => $exception->getMessage()], 401);
+        } else {
+            if (strpos($url, '!') !== false) {
+                return redirect()->route('adm.login');
+            } elseif (strpos($url, 's') !== false) {
+                return redirect()->route('login');
+            }
+        }
+
+        return redirect()->guest($exception->redirectTo() ?? route('login'));
     }
 }

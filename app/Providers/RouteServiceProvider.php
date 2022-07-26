@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
+    protected $namespace = 'App\Http\Controllers';
+
     /**
      * The path to the "home" route for your application.
      *
@@ -18,6 +20,7 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     public const HOME = '/s';
+    public const ADMIN_HOME = '/!';
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
@@ -39,6 +42,10 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->prefix('s')
                 ->group(base_path('routes/system.php'));
+
+            Route::middleware('web')
+                ->prefix('!')
+                ->group(base_path('routes/admin.php'));
         });
     }
 

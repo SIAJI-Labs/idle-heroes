@@ -153,8 +153,8 @@
         @yield('content_modal')
         
         {{-- Logout Function --}}
-        @if (auth()->check())
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+        @if (auth()->check() && isset($wlogout_route))
+            <form id="logout-form" action="{{ $wlogout_route }}" method="POST" class="d-none">
                 @csrf
             </form>
         @endif

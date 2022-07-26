@@ -27,6 +27,7 @@ class ViewSystemServiceProvider extends ServiceProvider
         View::composer(['layouts.system.app', 'content.system.*'], function ($view) {
             // $appVersion = '0.0.1';
             $appVersion = env('APP_VERSION');
+            $wlogout_route = route('logout');
 
             $menu = [
                 [
@@ -106,6 +107,7 @@ class ViewSystemServiceProvider extends ServiceProvider
                 'provAppVersion' => $appVersion,
                 'provMenu' => $menu,
                 'provTopMenu' => $topMenu,
+                'wlogout_route' => $wlogout_route
             ]);
         });
     }

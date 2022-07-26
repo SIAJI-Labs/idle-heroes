@@ -202,6 +202,7 @@ return [
          */
         App\Providers\ViewGlobalServiceProvider::class,
         App\Providers\ViewSystemServiceProvider::class,
+        App\Providers\ViewAdminServiceProvider::class,
     ],
 
     /*
