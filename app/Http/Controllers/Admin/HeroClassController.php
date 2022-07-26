@@ -7,13 +7,13 @@ use App\Traits\FileUploadTraits;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class HeroFactionController extends Controller
+class HeroClassController extends Controller
 {
     use FileUploadTraits;
 
-    protected $factionModel;
+    protected $classModel;
     private $basePath = 'files/hero';
-    private $prefixPath = 'faction';
+    private $prefixPath = 'class';
     private $filePath;
 
     /**
@@ -21,7 +21,7 @@ class HeroFactionController extends Controller
      */
     public function __construct()
     {
-        $this->factionModel = new \App\Models\HeroFaction();
+        $this->classModel = new \App\Models\HeroClass();
         $this->filePath = $this->basePath.'/'.$this->prefixPath;
     }
 
@@ -32,7 +32,7 @@ class HeroFactionController extends Controller
      */
     public function index()
     {
-        return view('content.adm.hero.faction.index');
+        return view('content.adm.hero.class.index');
     }
 
     /**
@@ -68,7 +68,7 @@ class HeroFactionController extends Controller
                 }
             }
 
-            $data = $this->factionModel;
+            $data = $this->classModel;
             $data->icon = $icon;
             $data->name = $request->name;
             $data->save();
@@ -88,7 +88,7 @@ class HeroFactionController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $data = $this->factionModel->where(\DB::raw('BINARY `uuid`'), $id)
+        $data = $this->classModel->where(\DB::raw('BINARY `uuid`'), $id)
             ->firstOrFail();
 
         if ($request->ajax()) {
@@ -127,7 +127,7 @@ class HeroFactionController extends Controller
             'name' => ['string', 'max:191'],
         ]);
 
-        $data = $this->factionModel->where(\DB::raw('BINARY `uuid`'), $id)
+        $data = $this->classModel->where(\DB::raw('BINARY `uuid`'), $id)
             ->firstOrFail();
         \DB::transaction(function () use ($request, $data) {
             $icon = $data->icon ?? null;
@@ -168,7 +168,7 @@ class HeroFactionController extends Controller
     {
         $data_limit = $request->limit ?? 10;
 
-        $data = $this->factionModel->query();
+        $data = $this->classModel->query();
         $last_page = null;
         if ($request->has('search') && $request->search != '') {
             // Apply search param

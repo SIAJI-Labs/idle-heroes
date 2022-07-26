@@ -1,10 +1,10 @@
 @extends('layouts.app', [
     'wdashboard' => true,
-    'wsecond_title' => 'Hero Faction',
+    'wsecond_title' => 'Hero Class',
     'wsidebar_menu' => 'hero',
-    'wsidebar_submenu' => 'faction',
+    'wsidebar_submenu' => 'class',
     'wheader' => [
-        'header_title' => 'Hero Faction',
+        'header_title' => 'Hero Class',
         'header_breadcrumb' => [
             [
                 'title' => 'Dashboard',
@@ -17,7 +17,7 @@
                 'is_active' => false,
                 'url' => null
             ], [
-                'title' => 'Faction',
+                'title' => 'Class',
                 'icon' => null,
                 'is_active' => true,
                 'url' => null
@@ -29,7 +29,7 @@
 @section('content')
     <div class="row">
         <div class="col-12 col-lg-4">
-            <form class="card" id="form" method="POST" action="{{ route('adm.hero.faction.store') }}" enctype="multipart/form-data">
+            <form class="card" id="form" method="POST" action="{{ route('adm.hero.class.store') }}" enctype="multipart/form-data">
                 @csrf
                 @method('POST')
 
@@ -44,7 +44,7 @@
                     </div>
                     <div class="form-group last:tw__mb-0">
                         <label>Name</label>
-                        <input type="text" class="form-control" name="name" id="input-name" placeholder="Faction Name">
+                        <input type="text" class="form-control" name="name" id="input-name" placeholder="Class Name">
                     </div>
                 </div>
                 <div class="card-footer tw__text-right">
@@ -60,7 +60,7 @@
                 <div class="card-header">
                     <h5 class="card-title">List</h5>
                 </div>
-                <div class="card-body" id="faction-container"></div>
+                <div class="card-body" id="class-container"></div>
                 <div class="card-footer">
                     <button type="button" class="btn btn-primary btn-sm page-control tw__flex tw__items-center tw__gap-1" id="btn-load_more" data-page="1" onclick="fetchData(1)"><i class="fa-solid fa-arrows-rotate"></i> Load More</button>
                 </div>
@@ -72,9 +72,9 @@
 @section('js_inline')
     <script>
         const fetchData = (page = 1) => {
-            if(document.getElementById('faction-container')){
+            if(document.getElementById('class-container')){
                 let button = null;
-                let container = document.getElementById('faction-container');
+                let container = document.getElementById('class-container');
                 if(page === parseInt(1)){
                     container.innerHTML = 'Loading...';
                 }
@@ -84,7 +84,7 @@
                     button.innerHTML = `<i class="fa-solid fa-spinner" data-animate="spin"></i> Loading`;
                 }
 
-                let url = new URL(`{{ route('adm.json.hero.faction.list') }}`);
+                let url = new URL(`{{ route('adm.json.hero.class.list') }}`);
                 url.searchParams.append('page', page);
                 url.searchParams.append('limit', 5);
                 url.searchParams.append('force_order_column', 'order');
@@ -122,7 +122,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item" href="{{ route('adm.hero.faction.index') }}/${val.uuid}">
+                                                <a class="dropdown-item" href="{{ route('adm.hero.class.index') }}/${val.uuid}">
                                                     <span class=" tw__flex tw__items-center"><i class="fa-solid fa-eye"></i>Show</span>
                                                 </a>
                                             </li>
@@ -178,7 +178,7 @@
                     form.querySelector('.card-title').innerHTML = 'Form (Insert)';
                 }
                 // Reset Action URL
-                form.setAttribute('action', '{{ route('adm.hero.faction.store') }}');
+                form.setAttribute('action', '{{ route('adm.hero.class.store') }}');
                 // Set Method
                 if(form.querySelector('input[name="_method"]')){
                     form.querySelector('input[name="_method"]').value = 'POST';
@@ -200,7 +200,7 @@
 
         if(document.getElementById('form')){
             function editData(uuid) {
-                axios.get(`{{ route('adm.hero.faction.index') }}/${uuid}`)
+                axios.get(`{{ route('adm.hero.class.index') }}/${uuid}`)
                     .then(function (response) {
                         let result = response.data;
                         let data = result.result.data;
@@ -213,7 +213,7 @@
                             form.querySelector('.card-title').innerHTML = 'Form (Update)';
                         }
                         // Reset Action URL
-                        form.setAttribute('action', `{{ route('adm.hero.faction.index') }}/${data.uuid}`);
+                        form.setAttribute('action', `{{ route('adm.hero.class.index') }}/${data.uuid}`);
                         // Set Method
                         if(form.querySelector('input[name="_method"]')){
                             form.querySelector('input[name="_method"]').value = 'PUT';

@@ -39,6 +39,8 @@ Route::group([
         ], function(){
             // Faction
             Route::resource('faction', \App\Http\Controllers\Admin\HeroFactionController::class);
+            // Class
+            Route::resource('class', \App\Http\Controllers\Admin\HeroClassController::class);
         });
 
         // JSON
@@ -53,6 +55,8 @@ Route::group([
             ], function(){
                 // Faction
                 Route::get('faction', [\App\Http\Controllers\Admin\HeroFactionController::class, 'jsonList'])->name('faction.list');
+                // Class
+                Route::get('class', [\App\Http\Controllers\Admin\HeroClassController::class, 'jsonList'])->name('class.list');
             });
         });
     });
