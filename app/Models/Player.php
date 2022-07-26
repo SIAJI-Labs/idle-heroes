@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Guild extends Model
+class Player extends Model
 {
     use HasFactory;
 
@@ -18,7 +18,7 @@ class Guild extends Model
     protected $fillable = [
         'association_id',
         'name',
-        'guild_id'
+        'player_identifier'
     ];
 
     /**
@@ -56,8 +56,9 @@ class Guild extends Model
      */
     public function guildMember()
     {
-        return $this->hasMany(\App\Models\GuildMember::class, 'guild_id')
-            ->whereNull('out');
+        return $this->hasOne(\App\Models\GuildMember::class, 'player_id')
+            ->whereNull('out')
+            ->orderBy('join', 'desc');
     }
 
     /**

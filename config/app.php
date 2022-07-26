@@ -200,6 +200,7 @@ return [
         /*
          * View Service Providers...
          */
+        App\Providers\ViewGlobalServiceProvider::class,
         App\Providers\ViewSystemServiceProvider::class,
     ],
 

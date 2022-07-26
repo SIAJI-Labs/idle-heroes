@@ -103,7 +103,7 @@
                                         <small>Consist of ${guild} and ${player}</small>
                                     </div>
 
-                                    <div class="dropdown tw__leading-none tw__flex tw__items-baseline">
+                                    <div class="dropdown dropstart tw__leading-none tw__flex tw__items-baseline">
                                         <button class="dropdown-toggle arrow-none" type="button" data-bs-auto-close="outside" id="dropdown-${index}" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fa-solid fa-ellipsis-vertical"></i>
                                         </button>
@@ -123,24 +123,12 @@
                                 `;
                                 container.appendChild(content);
                             });
-
-                            // Update Pagination
-                            if(document.getElementById('btn-load_more')){
-                                let nextPage = parseInt(page) + 1;
-                                if(page === response.last_page){
-                                    document.getElementById('btn-load_more').setAttribute('disabled', true);
-                                } else {
-                                    document.getElementById('record-load_more').removeAttribute('disabled');
-                                    document.getElementById('btn-load_more').setAttribute('onclick', `fetchData(${nextPage})`);
-                                    document.getElementById('btn-load_more').dataset.page = nextPage;
-                                }
-                            }
                         } else {
                             content.classList.add('alert', 'alert-primary', 'tw__mb-0');
                             content.setAttribute('role', 'alert');
                             content.innerHTML = `
                                 <div class=" tw__flex tw__items-center">
-                                    <i class="bi bi-info-circle-fill tw__mr-2"></i>
+                                    <i class="fa-solid fa-triangle-exclamation tw__mr-2"></i>
                                     <div class="tw__block tw__font-bold tw__uppercase">
                                         Attention!
                                     </div>
@@ -148,7 +136,19 @@
                                 <span class="tw__block tw__italic">No data found</span>
                             `;
 
-                            container.appendChild(recordContent);
+                            container.appendChild(content);
+                        }
+
+                        // Update Pagination
+                        if(document.getElementById('btn-load_more')){
+                            let nextPage = parseInt(page) + 1;
+                            if(page === response.last_page){
+                                document.getElementById('btn-load_more').setAttribute('disabled', true);
+                            } else {
+                                document.getElementById('btn-load_more').removeAttribute('disabled');
+                                document.getElementById('btn-load_more').setAttribute('onclick', `fetchData(${nextPage})`);
+                                document.getElementById('btn-load_more').dataset.page = nextPage;
+                            }
                         }
                     });
             }
@@ -207,6 +207,7 @@
                         let result = response.data;
                         console.log(result);
 
+                        fetchData(1);
                         resetAction();
                     })
                     .catch(function (error) {
@@ -217,7 +218,7 @@
                             let el = document.getElementById(`input-${key}`);
                             el.closest('.form-control').classList.add('is-invalid');
                             el.closest('.form-group').classList.add('has-invalid');
-                            el.closest('.form-group').insertAdjacentHTML('beforeend', `<small class="invalid-feedback tw__text-xs">*${value}</small>`);
+                            el.closest('.form-group').insertAdjacentHTML('beforeend', `<small class="invalid-feedback tw__text-xs tw__block">*${value}</small>`);
                         }
                     })
                     .then(function () {

@@ -57,6 +57,10 @@ class Association extends Model
     {
         return $this->hasMany(\App\Models\Guild::class, 'association_id');
     }
+    public function player()
+    {
+        return $this->hasMany(\App\Models\Player::class, 'association_id');
+    }
 
     /**
      * Foreign Key Relation

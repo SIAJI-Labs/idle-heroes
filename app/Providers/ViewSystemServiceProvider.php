@@ -51,7 +51,33 @@ class ViewSystemServiceProvider extends ServiceProvider
                             'icon' => '<i class="fa-solid fa-house-user"></i>',
                             'active_key' => 'guild',
                             'submenu' => null,
+                        ], [
+                            'name' => 'Player',
+                            'route' => route('s.player.index'),
+                            'icon' => '<i class="fa-solid fa-users"></i>',
+                            'active_key' => 'player',
+                            'submenu' => null,
                         ], 
+                    ],
+                ], [
+                    'name' => 'Game Mode',
+                    'description' => null,
+                    'menu' => [
+                        [
+                            'name' => 'Star Expedition',
+                            'route' => null,
+                            'icon' => '<i class="fa-brands fa-octopus-deploy"></i>',
+                            'active_key' => 'star-expedition',
+                            'submenu' => null,
+                            'disabled' => true
+                        ], [
+                            'name' => 'Guild War',
+                            'route' => null,
+                            'icon' => '<i class="fa-brands fa-galactic-senate"></i>',
+                            'active_key' => 'guild-war',
+                            'submenu' => null,
+                            'disabled' => true
+                        ],
                     ],
                 ], [
                     'name' => 'Developer',

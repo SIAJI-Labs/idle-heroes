@@ -20,6 +20,13 @@ html, body {
         animation: spin 1.5s linear infinite;;
     }
 
+    // Bootstrap
+    .dropstart {
+        ::before {
+            display: none;
+        }
+    }
+
     // Footer
     .footer {
         bottom: 0;

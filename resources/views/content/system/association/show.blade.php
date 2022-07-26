@@ -1,10 +1,10 @@
 @extends('layouts.app', [
     'wdashboard' => true,
-    'wsecond_title' => 'Association',
+    'wsecond_title' => 'Association: Detail',
     'wsidebar_menu' => 'association',
     'wsidebar_submenu' => null,
     'wheader' => [
-        'header_title' => 'Association',
+        'header_title' => 'Association: Detail',
         'header_breadcrumb' => [
             [
                 'title' => 'Dashboard',
@@ -17,7 +17,7 @@
                 'is_active' => false,
                 'url' => route('s.association.index')
             ], [
-                'title' => 'Show',
+                'title' => 'Detail',
                 'icon' => null,
                 'is_active' => true,
                 'url' => null

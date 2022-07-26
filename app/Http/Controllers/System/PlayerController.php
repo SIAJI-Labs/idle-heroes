@@ -5,9 +5,10 @@ namespace App\Http\Controllers\System;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class GuildController extends Controller
+class PlayerController extends Controller
 {
     protected $guildModel;
+    protected $playerModel;
     protected $associationModel;
 
     /**
@@ -16,6 +17,7 @@ class GuildController extends Controller
     public function __construct()
     {
         $this->guildModel = new \App\Models\Guild();
+        $this->playerModel = new \App\Models\Player();
         $this->associationModel = new \App\Models\Association();
     }
 
@@ -26,7 +28,7 @@ class GuildController extends Controller
      */
     public function index()
     {
-        return view('content.system.guild.index');
+        return view('content.system.player.index');
     }
 
     /**
@@ -50,7 +52,7 @@ class GuildController extends Controller
         $request->validate([
             'association_id' => ['required', 'string', 'exists:'.$this->associationModel->getTable().',uuid'],
             'name' => ['required', 'string', 'max:191'],
-            'guild_id' => ['nullable', 'string', 'max:191']
+            'player_id' => ['nullable', 'string', 'max:191']
         ]);
 
         \DB::transaction(function () use ($request) {
@@ -58,10 +60,10 @@ class GuildController extends Controller
                 ->where('user_id', \Auth::user()->id)
                 ->firstOrFail();
 
-            $data = $this->guildModel;
+            $data = $this->playerModel;
             $data->association_id = $association->id;
             $data->name = $request->name;
-            $data->guild_id = $request->guild_id;
+            $data->player_identifier = $request->player_id;
             $data->save();
         });
 
@@ -79,15 +81,7 @@ class GuildController extends Controller
      */
     public function show($id)
     {
-        $data = $this->guildModel->with('association')->where(\DB::raw('BINARY `uuid`'), $id)
-            ->whereHas('association', function($q){
-                return $q->where('user_id', \Auth::user()->id);
-            })
-            ->firstOrFail();
-
-        return view('content.system.guild.show', [
-            'data' => $data
-        ]);
+        //
     }
 
     /**
@@ -131,8 +125,8 @@ class GuildController extends Controller
     {
         $data_limit = $request->limit ?? 10;
 
-        $data = $this->guildModel->query()
-            ->withCount('guildMember')
+        $data = $this->playerModel->query()
+            ->with('guildMember', 'guildMember.guild')
             ->whereHas('association', function($q){
                 return $q->where('user_id', \Auth::user()->id);
             });
@@ -140,6 +134,22 @@ class GuildController extends Controller
         if ($request->has('search') && $request->search != '') {
             // Apply search param
             $data = $data->where('name', 'like', '%'.$request->search.'%');
+        }
+
+        if($request->has('action') && $request->action != ''){
+            if($request->action === 'guild-member'){
+                if($request->has('status') && $request->status === 'member' && $request->has('guild_id') && $request->guild_id != ''){
+                    $data->whereHas('guildMember', function($q) use ($request){
+                        $guild = $this->guildModel->where(\DB::raw('BINARY `uuid`'), $request->guild_id)
+                            ->firstOrFail();
+                        return $q->where('guild_id', $guild->id);
+                    });
+                } else {
+                    $data->where(function($q){
+                        return $q->whereDoesntHave('guildMember');
+                    });
+                }
+            }
         }
 
         if ($request->has('page')) {

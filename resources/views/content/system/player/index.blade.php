@@ -1,10 +1,10 @@
 @extends('layouts.app', [
     'wdashboard' => true,
-    'wsecond_title' => 'Guild',
-    'wsidebar_menu' => 'guild',
+    'wsecond_title' => 'Player',
+    'wsidebar_menu' => 'player',
     'wsidebar_submenu' => null,
     'wheader' => [
-        'header_title' => 'Guild',
+        'header_title' => 'Player',
         'header_breadcrumb' => [
             [
                 'title' => 'Dashboard',
@@ -12,7 +12,7 @@
                 'is_active' => false,
                 'url' => route('s.index')
             ], [
-                'title' => 'Guild',
+                'title' => 'Player',
                 'icon' => null,
                 'is_active' => true,
                 'url' => null
@@ -29,7 +29,7 @@
 @section('content')
     <div class="row">
         <div class="col-12 col-lg-4">
-            <form class="card" id="form" method="POST" action="{{ route('s.guild.store') }}">
+            <form class="card" id="form" method="POST" action="{{ route('s.player.store') }}">
                 @csrf
                 @method('POST')
 
@@ -45,11 +45,11 @@
                     </div>
                     <div class="form-group">
                         <label>Name</label>
-                        <input type="text" class="form-control" name="name" id="input-name" placeholder="Guild Name">
+                        <input type="text" class="form-control" name="name" id="input-name" placeholder="Player Name">
                     </div>
                     <div class="form-group tw__mb-0">
-                        <label>Guild Identifier</label>
-                        <input type="text" class="form-control" name="guild_id" id="input-guild_id" placeholder="Guild Identifier">
+                        <label>Player Identifier</label>
+                        <input type="text" class="form-control" name="player_id" id="input-player_id" placeholder="Player Identifier">
                     </div>
                 </div>
                 <div class="card-footer tw__text-right">
@@ -65,7 +65,7 @@
                 <div class="card-header">
                     <h5 class="card-title">List</h5>
                 </div>
-                <div class="card-body" id="guild-container"></div>
+                <div class="card-body" id="player-container"></div>
                 <div class="card-footer">
                     <button type="button" class="btn btn-primary btn-sm page-control tw__flex tw__items-center tw__gap-1" id="btn-load_more" data-page="1" onclick="fetchData(1)"><i class="fa-solid fa-arrows-rotate"></i> Load More</button>
                 </div>
@@ -113,9 +113,9 @@
         }
 
         const fetchData = (page = 1) => {
-            if(document.getElementById('guild-container')){
+            if(document.getElementById('player-container')){
                 let button = null;
-                let container = document.getElementById('guild-container');
+                let container = document.getElementById('player-container');
                 if(page === parseInt(1)){
                     container.innerHTML = 'Loading...';
                 }
@@ -125,7 +125,7 @@
                     button.innerHTML = `<i class="fa-solid fa-spinner" data-animate="spin"></i> Loading`;
                 }
 
-                let url = new URL(`{{ route('s.json.guild.list') }}`);
+                let url = new URL(`{{ route('s.json.player.list') }}`);
                 url.searchParams.append('page', page);
                 url.searchParams.append('limit', 5);
                 url.searchParams.append('force_order_column', 'name');
@@ -145,13 +145,11 @@
 
                         if(data.length > 0){
                             data.forEach((val, index) => {
-                                let guild = `0 guild`;
-                                let player = `0 player`;
                                 content.classList.add('tw__p-4', 'tw__my-4', 'first:tw__mt-0', 'last:tw__mb-0', 'tw__bg-gray-100', 'tw__rounded-lg', 'tw__w-full', 'tw__flex');
                                 content.innerHTML = `
                                     <div class="tw__mr-auto">
-                                        <span class="tw__font-bold tw__block">${val.name}${val.guild_id ? `<small class="tw__ml-1 tw__text-gray-400">(#${val.guild_id})</small>` : ''}</span>
-                                        <small>${val.guild_member_count}/30 members</small>
+                                        <span class="tw__font-bold tw__block">${val.name}${val.player_identifier ? `<small class="tw__ml-1 tw__text-gray-400">(#${val.player_identifier})</small>` : ''}</span>
+                                        <small>${val.guild_member ? '' : 'Non-'}Member${val.guild_member && val.guild_member.guild ? ` - <a href="{{ route('s.guild.index') }}/${val.guild_member.guild.uuid}}">${val.guild_member.guild.name}</a>` : ''}</small>
                                     </div>
 
                                     <div class="dropdown dropstart tw__leading-none tw__flex tw__items-baseline">
@@ -165,7 +163,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item" href="{{ route('s.guild.index') }}/${val.uuid}">
+                                                <a class="dropdown-item" href="{{ route('s.player.index') }}/${val.uuid}">
                                                     <span class=" tw__flex tw__items-center"><i class="fa-solid fa-eye"></i>Show</span>
                                                 </a>
                                             </li>
@@ -173,7 +171,6 @@
                                     </div>
                                 `;
                                 container.appendChild(content);
-                                content = document.createElement('div');
                             });
                         } else {
                             content.classList.add('alert', 'alert-primary', 'tw__mb-0');
@@ -216,7 +213,7 @@
                     form.querySelector('.card-title').innerHTML = 'Form (Insert)';
                 }
                 // Reset Action URL
-                form.setAttribute('action', '{{ route('s.guild.store') }}');
+                form.setAttribute('action', '{{ route('s.player.store') }}');
                 // Set Method
                 if(form.querySelector('input[name="_token"]')){
                     form.querySelector('input[name="_token"]').value = 'POST';
@@ -230,8 +227,8 @@
                     form.querySelector('input[name="name"]').value = '';
                 }
                 // Reset Identifier
-                if(form.querySelector('input[name="guild_id"]')){
-                    form.querySelector('input[name="guild_id"]').value = '';
+                if(form.querySelector('input[name="player_id"]')){
+                    form.querySelector('input[name="player_id"]').value = '';
                 }
             }
         }
