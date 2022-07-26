@@ -56,6 +56,11 @@ class ViewAdminServiceProvider extends ServiceProvider
                                     'route' => route('adm.hero.class.index'),
                                     'active_key' => 'hero',
                                     'active_sub' => 'class',
+                                ], [
+                                    'name' => 'List',
+                                    'route' => route('adm.hero.index'),
+                                    'active_key' => 'hero',
+                                    'active_sub' => 'list',
                                 ], 
                             ],
                         ], 

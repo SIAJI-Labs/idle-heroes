@@ -1,10 +1,10 @@
 @extends('layouts.app', [
     'wdashboard' => true,
-    'wsecond_title' => 'Hero Class',
+    'wsecond_title' => 'Hero',
     'wsidebar_menu' => 'hero',
-    'wsidebar_submenu' => 'class',
+    'wsidebar_submenu' => 'list',
     'wheader' => [
-        'header_title' => 'Hero Class',
+        'header_title' => 'Hero',
         'header_breadcrumb' => [
             [
                 'title' => 'Dashboard',
@@ -14,11 +14,6 @@
             ], [
                 'title' => 'Hero',
                 'icon' => null,
-                'is_active' => false,
-                'url' => null
-            ], [
-                'title' => 'Class',
-                'icon' => null,
                 'is_active' => true,
                 'url' => null
             ], 
@@ -26,10 +21,15 @@
     ]
 ])
 
+@section('css_plugins')
+    {{-- Choices --}}
+    @include('layouts.plugins.choices.css')
+@endsection
+
 @section('content')
     <div class="row">
         <div class="col-12 col-lg-4">
-            <form class="card" id="form" method="POST" action="{{ route('adm.hero.class.store') }}" enctype="multipart/form-data">
+            <form class="card" id="form" method="POST" action="{{ route('adm.hero.store') }}" enctype="multipart/form-data">
                 @csrf
                 @method('POST')
 
@@ -37,14 +37,26 @@
                     <h5 class="card-title">Form (insert)</h5>
                 </div>
                 <div class="card-body">
-                    <div class="form-group last:tw__mb-0">
-                        <label>Icon</label>
-                        <input type="file" class="form-control" id="input-icon" name="icon" accept=".jpg,.jpeg,.png,.svg,.gif,.webp">
-                        <small class="text-muted tw__italic">*Max 200kb; Only accept .jpg, .jpeg, .png, .svg, .gif, .webp</small>
+                    <div class="form-group mb-4">
+                        <label for="input-faction_id">Faction</label>
+                        <select class="form-control" id="input-faction_id" name="faction_id" placeholder="Search for Faction">
+                            <option value="">Search for Faction</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="input-class_id">Class</label>
+                        <select class="form-control" id="input-class_id" name="class_id" placeholder="Search for Class">
+                            <option value="">Search for Class</option>
+                        </select>
                     </div>
                     <div class="form-group last:tw__mb-0">
                         <label>Name</label>
-                        <input type="text" class="form-control" name="name" id="input-name" placeholder="Class Name">
+                        <input type="text" class="form-control" name="name" id="input-name" placeholder="Hero Name">
+                    </div>
+                    <div class="form-group last:tw__mb-0">
+                        <label>Avatar</label>
+                        <input type="file" class="form-control" id="input-avatar" name="avatar" accept=".jpg,.jpeg,.png,.svg,.gif,.webp">
+                        <small class="text-muted tw__italic">*Max 200kb; Only accept .jpg, .jpeg, .png, .svg, .gif, .webp</small>
                     </div>
                 </div>
                 <div class="card-footer tw__text-right">
@@ -60,7 +72,7 @@
                 <div class="card-header">
                     <h5 class="card-title">List</h5>
                 </div>
-                <div class="card-body" id="class-container"></div>
+                <div class="card-body" id="hero-container"></div>
                 <div class="card-footer">
                     <button type="button" class="btn btn-primary btn-sm page-control tw__flex tw__items-center tw__gap-1" id="btn-load_more" data-page="1" onclick="fetchData(1)"><i class="fa-solid fa-arrows-rotate"></i> Load More</button>
                 </div>
@@ -69,12 +81,83 @@
     </div>
 @endsection
 
+@section('js_plugins')
+    {{-- Choices --}}
+    @include('layouts.plugins.choices.js')
+@endsection
+
 @section('js_inline')
+    {{-- Choices --}}
+    <script>
+        // Faction Choices
+        var factionChoice = null;
+        if(document.getElementById('input-faction_id')){
+            const factionEl = document.getElementById('input-faction_id');
+            factionChoice = new Choices(factionEl, {
+                allowHTML: true,
+                searchEnabled: false,
+                removeItemButton: true,
+                searchPlaceholderValue: "Search for Faction",
+                placeholder: true,
+                placeholderValue: 'Search for Faction',
+                shouldSort: false
+            });
+            factionChoice.setChoices(() => {
+                // console.log(e);
+                return fetch(
+                    `{{ route('adm.json.hero.faction.list') }}`
+                )
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    return data.data.map(function(result) {
+                        return {
+                            value: result.uuid,
+                            label: `<span class=" tw__flex tw__items-center tw__gap-1">${result.icon ? `<img src="{{ asset('') }}/${result.icon}" class="tw__h-4">` : ''}${result.name}</span>`
+                        };
+                    });
+                });
+            });
+        }
+        // Class Choices
+        var classChoice = null;
+        if(document.getElementById('input-class_id')){
+            const classEl = document.getElementById('input-class_id');
+            classChoice = new Choices(classEl, {
+                allowHTML: true,
+                searchEnabled: false,
+                removeItemButton: true,
+                searchPlaceholderValue: "Search for Class",
+                placeholder: true,
+                placeholderValue: 'Search for Class',
+                shouldSort: false
+            });
+            classChoice.setChoices(() => {
+                // console.log(e);
+                return fetch(
+                    `{{ route('adm.json.hero.class.list') }}`
+                )
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    return data.data.map(function(result) {
+                        return {
+                            value: result.uuid,
+                            label: `<span class=" tw__flex tw__items-center tw__gap-1">${result.icon ? `<img src="{{ asset('') }}/${result.icon}" class="tw__h-4">` : ''}${result.name}</span>`
+                        };
+                    });
+                });
+            });
+        }
+    </script>
+
     <script>
         const fetchData = (page = 1) => {
-            if(document.getElementById('class-container')){
+            if(document.getElementById('hero-container')){
                 let button = null;
-                let container = document.getElementById('class-container');
+                let container = document.getElementById('hero-container');
                 if(page === parseInt(1)){
                     container.innerHTML = 'Loading...';
                 }
@@ -84,10 +167,10 @@
                     button.innerHTML = `<i class="fa-solid fa-spinner" data-animate="spin"></i> Loading`;
                 }
 
-                let url = new URL(`{{ route('adm.json.hero.class.list') }}`);
+                let url = new URL(`{{ route('adm.json.hero.list') }}`);
                 url.searchParams.append('page', page);
                 url.searchParams.append('limit', 5);
-                url.searchParams.append('force_order_column', 'order');
+                url.searchParams.append('force_order_column', 'name');
                 url.searchParams.append('force_order', 'asc');
                 fetch(url)
                     .then((response) => {
@@ -104,11 +187,30 @@
 
                         if(data.length > 0){
                             data.forEach((val, index) => {
+                                let smallInformation = [];
+                                if(val.hero_faction){
+                                    smallInformation.push(`
+                                        <div class=" tw__flex tw__items-center tw__gap-2">
+                                            ${val.hero_faction.icon ? `<img src="{{ asset('') }}/${val.hero_faction.icon}" alt="${val.hero_faction.name}" class="tw__h-3">` : ''}
+                                            <span>${val.hero_faction.name}</span>
+                                        </div>
+                                    `);
+                                }
+                                if(val.hero_class){
+                                    smallInformation.push(`
+                                        <div class=" tw__flex tw__items-center tw__gap-2">
+                                            ${val.hero_class.icon ? `<img src="{{ asset('') }}/${val.hero_class.icon}" alt="${val.hero_class.name}" class="tw__h-3">` : ''}
+                                            <span>${val.hero_class.name}</span>
+                                        </div>
+                                    `);
+                                }
+
                                 content.classList.add('tw__p-4', 'tw__my-4', 'first:tw__mt-0', 'last:tw__mb-0', 'tw__bg-gray-100', 'tw__rounded-lg', 'tw__w-full', 'tw__flex');
                                 content.innerHTML = `
-                                    <div class=" tw__flex tw__items-center tw__gap-2">
-                                        ${val.icon ? `<img src="{{ asset('') }}/${val.icon}" alt="${val.name}" class="tw__h-5">` : ''}
-                                        <span>${val.name}</span>
+                                    <div class=" tw__flex tw__gap-2 tw__flex-col">
+                                        ${val.avatar ? `<img src="{{ asset('') }}/${val.avatar}" alt="${val.name}" class="tw__h-5">` : ''}
+                                        <span class="tw__text-base tw__font-bold">${val.name}</span>
+                                        <small class="tw__flex tw__items-center tw__gap-1">${smallInformation.join('<span>/</span>')}</small>
                                     </div>
 
                                     <div class="tw__ml-auto dropdown dropstart tw__leading-none tw__flex tw__items-baseline">
@@ -122,7 +224,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item" href="{{ route('adm.hero.class.index') }}/${val.uuid}">
+                                                <a class="dropdown-item" href="{{ route('adm.hero.faction.index') }}/${val.uuid}">
                                                     <span class=" tw__flex tw__items-center"><i class="fa-solid fa-eye"></i>Show</span>
                                                 </a>
                                             </li>
@@ -178,14 +280,22 @@
                     form.querySelector('.card-title').innerHTML = 'Form (Insert)';
                 }
                 // Reset Action URL
-                form.setAttribute('action', '{{ route('adm.hero.class.store') }}');
+                form.setAttribute('action', '{{ route('adm.hero.store') }}');
                 // Set Method
                 if(form.querySelector('input[name="_method"]')){
                     form.querySelector('input[name="_method"]').value = 'POST';
                 }
-                // Reset Icon
-                if(form.querySelector('input[name="icon"]')){
-                    form.querySelector('input[name="icon"]').value = '';
+                // Reset Faction
+                if(factionChoice){
+                    factionChoice.setChoiceByValue('');
+                }
+                // Reset Class
+                if(classChoice){
+                    classChoice.setChoiceByValue('');
+                }
+                // Reset Avatar
+                if(form.querySelector('input[name="avatar"]')){
+                    form.querySelector('input[name="avatar"]').value = '';
                 }
                 // Reset Name
                 if(form.querySelector('input[name="name"]')){
@@ -200,7 +310,7 @@
 
         if(document.getElementById('form')){
             function editData(uuid) {
-                axios.get(`{{ route('adm.hero.class.index') }}/${uuid}`)
+                axios.get(`{{ route('adm.hero.index') }}/${uuid}`)
                     .then(function (response) {
                         let result = response.data;
                         let data = result.result.data;
@@ -213,15 +323,23 @@
                             form.querySelector('.card-title').innerHTML = 'Form (Update)';
                         }
                         // Reset Action URL
-                        form.setAttribute('action', `{{ route('adm.hero.class.index') }}/${data.uuid}`);
+                        form.setAttribute('action', `{{ route('adm.hero.index') }}/${data.uuid}`);
                         // Set Method
                         if(form.querySelector('input[name="_method"]')){
                             form.querySelector('input[name="_method"]').value = 'PUT';
                         }
-                        // Reset Icon
-                        if(form.querySelector('input[name="icon"]')){
-                            form.querySelector('input[name="icon"]').value = '';
-                            form.querySelector('input[name="icon"]').closest('.form-group').insertAdjacentHTML('beforeend', `<small class="tw__mt-1 old-file text-muted tw__italic tw__block">**Leave it empty to keep old file!<a data-fslightbox href="{{ asset('') }}/${data.icon}" class="tw__ml-1 tw__text-blue-400 hover:tw__text-blue-700 hover:tw__underline">(Preview old file)</a></small>`);
+                        // Reset Faction
+                        if(factionChoice && data.hero_faction){
+                            factionChoice.setChoiceByValue(data.hero_faction.uuid);
+                        }
+                        // Reset Class
+                        if(classChoice && data.hero_class){
+                            classChoice.setChoiceByValue(data.hero_class.uuid);
+                        }
+                        // Reset Avatar
+                        if(form.querySelector('input[name="avatar"]')){
+                            form.querySelector('input[name="avatar"]').value = '';
+                            form.querySelector('input[name="avatar"]').closest('.form-group').insertAdjacentHTML('beforeend', `<small class="tw__mt-1 old-file text-muted tw__italic tw__block">**Leave it empty to keep old file!<a data-fslightbox href="{{ asset('') }}/${data.avatar}" class="tw__ml-1 tw__text-blue-400 hover:tw__text-blue-700 hover:tw__underline">(Preview old file)</a></small>`);
                         }
                         // Reset Name
                         if(form.querySelector('input[name="name"]')){
@@ -254,9 +372,9 @@
                 // Create Request
                 let link = e.target.getAttribute('action');
                 let rawData = new FormData(e.target);
-                let file = document.getElementById('input-icon').files;
+                let file = document.getElementById('input-avatar').files;
                 if(file.length > 0){
-                    rawData.append('icon', file[0]);
+                    rawData.append('avatar', file[0]);
                 }
                 let formData = rawData;
                 axios.post(link, formData, {

@@ -54,6 +54,10 @@ class HeroFaction extends Model
      * 
      * @return model
      */
+    public function hero()
+    {
+        return $this->hasMany(\App\Models\Hero::class, 'faction_id');
+    }
 
     /**
      * Foreign Key Relation

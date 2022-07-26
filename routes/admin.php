@@ -42,6 +42,7 @@ Route::group([
             // Class
             Route::resource('class', \App\Http\Controllers\Admin\HeroClassController::class);
         });
+        Route::resource('hero', \App\Http\Controllers\Admin\HeroController::class);
 
         // JSON
         Route::group([
@@ -58,6 +59,7 @@ Route::group([
                 // Class
                 Route::get('class', [\App\Http\Controllers\Admin\HeroClassController::class, 'jsonList'])->name('class.list');
             });
+            Route::get('hero', [\App\Http\Controllers\Admin\HeroController::class, 'jsonList'])->name('hero.list');
         });
     });
 });

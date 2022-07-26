@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class HeroClass extends Model
+class Hero extends Model
 {
     use HasFactory;
 
@@ -16,9 +16,10 @@ class HeroClass extends Model
      * @var array
      */
     protected $fillable = [
+        'faction_id',
+        'class_id',
         'name',
-        'icon',
-        'order'
+        'avatar'
     ];
 
     /**
@@ -54,16 +55,20 @@ class HeroClass extends Model
      * 
      * @return model
      */
-    public function hero()
-    {
-        return $this->hasMany(\App\Models\Hero::class, 'class_id');
-    }
 
     /**
      * Foreign Key Relation
      * 
      * @return model
      */
+    public function heroFaction()
+    {
+        return $this->belongsTo(\App\Models\HeroFaction::class, 'faction_id');
+    }
+    public function heroClass()
+    {
+        return $this->belongsTo(\App\Models\HeroClass::class, 'class_id');
+    }
 
     /**
      * The "boot" method of the model.
@@ -78,11 +83,6 @@ class HeroClass extends Model
         static::creating(function ($model) {
             // Always generate UUID on Data Create
             $model->{'uuid'} = (string) Str::uuid();
-
-            // Get last order
-            $lastOrder = (new \App\Models\HeroClass())->orderBy('order', 'desc')->first() ? (new \App\Models\HeroClass())->orderBy('order', 'desc')->first()->order + 1 : 0;
-            // Auto sort
-            $model->{'order'} = $lastOrder;
         });
     }
 }
