@@ -31,5 +31,29 @@ Route::group([
     ], function(){
         // Dashboard
         Route::get('/', \App\Http\Controllers\Admin\DashboardController::class)->name('index');
+
+        // Hero
+        Route::group([
+            'prefix' => 'hero',
+            'as' => 'hero.'
+        ], function(){
+            // Faction
+            Route::resource('faction', \App\Http\Controllers\Admin\HeroFactionController::class);
+        });
+
+        // JSON
+        Route::group([
+            'prefix' => 'json',
+            'as' => 'json.'
+        ], function(){
+            // Hero
+            Route::group([
+                'prefix' => 'hero',
+                'as' => 'hero.'
+            ], function(){
+                // Faction
+                Route::get('faction', [\App\Http\Controllers\Admin\HeroFactionController::class, 'jsonList'])->name('faction.list');
+            });
+        });
     });
 });

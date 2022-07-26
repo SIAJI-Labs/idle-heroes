@@ -40,7 +40,20 @@ class ViewAdminServiceProvider extends ServiceProvider
                             'icon' => '<i class="fa-solid fa-house"></i>',
                             'active_key' => 'dashboard',
                             'submenu' => null,
-                        ],
+                        ], [
+                            'name' => 'Hero',
+                            'route' => null,
+                            'icon' => '<i class="fa-solid fa-shield-halved"></i>',
+                            'active_key' => 'hero',
+                            'submenu' => [
+                                [
+                                    'name' => 'Faction',
+                                    'route' => route('adm.hero.faction.index'),
+                                    'active_key' => 'hero',
+                                    'active_sub' => 'faction',
+                                ]
+                            ],
+                        ], 
                     ],
                 ],
             ];

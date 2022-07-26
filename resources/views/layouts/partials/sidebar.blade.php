@@ -35,7 +35,7 @@
                                         {{-- Submenu Arrow --}}
                                         @if (isset($menu['submenu']) && !empty($menu['submenu']))
                                             <span class="pc-arrow">
-                                                <i class="bi bi-chevron-right"></i>
+                                                <i class="fa-solid fa-angle-right"></i>
                                             </span>
                                         @endif
                                     </a>
@@ -61,7 +61,7 @@
                     <li class="pc-item">
                         <a href="{{ route('s.index') }}" class="pc-link ">
                             <span class="pc-micon">
-                                <i class="bi bi-house"></i>
+                                <i class="fa-solid fa-house"></i>
                             </span>
                             <span class="pc-mtext">Dashboard</span>
                         </a>
