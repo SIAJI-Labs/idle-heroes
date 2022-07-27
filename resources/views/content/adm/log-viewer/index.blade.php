@@ -10,7 +10,7 @@
                 'title' => 'Dashboard',
                 'icon' => null,
                 'is_active' => false,
-                'url' => route('s.index')
+                'url' => route('adm.index')
             ], [
                 'title' => 'Log Viewer',
                 'icon' => null,

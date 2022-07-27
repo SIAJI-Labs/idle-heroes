@@ -80,19 +80,7 @@ class ViewSystemServiceProvider extends ServiceProvider
                             'disabled' => true
                         ],
                     ],
-                ], [
-                    'name' => 'Developer',
-                    'description' => null,
-                    'menu' => [
-                        [
-                            'name' => 'Log Viewer',
-                            'route' => route('s.log-viewer.index'),
-                            'icon' => '<i class="fa-solid fa-laptop-code"></i>',
-                            'active_key' => 'log-viewer',
-                            'submenu' => null,
-                        ],
-                    ],
-                ]
+                ],
             ];
 
             $topMenu = [

@@ -55,12 +55,15 @@ class Handler extends ExceptionHandler
         \Log::debug("[System] Check Unauthenticated Handler Method ~ App\Exceptions\Handler@unauthenticated", [
             'domain' => $domain,
             'url' => $url,
+            'request' => [
+                'route' => $request->route()->computedMiddleware
+            ]
         ]);
 
         if ($request->expectsJson()) {
             return response()->json(['message' => $exception->getMessage()], 401);
         } else {
-            if (strpos($url, '!') !== false) {
+            if (strpos($url, '!') !== false || in_array('auth:admin', $request->route()->computedMiddleware)) {
                 return redirect()->route('adm.login');
             } elseif (strpos($url, 's') !== false) {
                 return redirect()->route('login');

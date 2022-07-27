@@ -43,9 +43,6 @@ Route::group([
         'index', 'store', 'update', 'show'
     ]);
 
-    // Log Viewer
-    Route::get('log-viewer', \App\Http\Controllers\System\LogViewerController::class)->name('log-viewer.index');
-
     // JSON
     Route::group([
         'prefix' => 'json',

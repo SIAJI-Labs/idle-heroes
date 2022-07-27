@@ -44,6 +44,9 @@ Route::group([
         });
         Route::resource('hero', \App\Http\Controllers\Admin\HeroController::class);
 
+        // Log Viewer
+        Route::get('log-viewer', \App\Http\Controllers\Admin\LogViewerController::class)->name('log-viewer.index');
+
         // JSON
         Route::group([
             'prefix' => 'json',

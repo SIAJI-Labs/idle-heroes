@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\System;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -15,6 +15,6 @@ class LogViewerController extends Controller
      */
     public function __invoke(Request $request)
     {
-        return view('content.system.log-viewer.index');
+        return view('content.adm.log-viewer.index');
     }
 }

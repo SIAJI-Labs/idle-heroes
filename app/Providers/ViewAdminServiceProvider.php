@@ -65,7 +65,19 @@ class ViewAdminServiceProvider extends ServiceProvider
                             ],
                         ], 
                     ],
-                ],
+                ], [
+                    'name' => 'Developer',
+                    'description' => null,
+                    'menu' => [
+                        [
+                            'name' => 'Log Viewer',
+                            'route' => route('adm.log-viewer.index'),
+                            'icon' => '<i class="fa-solid fa-laptop-code"></i>',
+                            'active_key' => 'log-viewer',
+                            'submenu' => null,
+                        ],
+                    ],
+                ]
             ];
 
             $topMenu = [
