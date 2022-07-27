@@ -1,6 +1,16 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./resources/assets/plugins/bootstrap/bootstrap.bundle.js":
+/*!****************************************************************!*\
+  !*** ./resources/assets/plugins/bootstrap/bootstrap.bundle.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+window.bootstrap = __webpack_require__(/*! bootstrap/dist/js/bootstrap.bundle.js */ "./node_modules/bootstrap/dist/js/bootstrap.bundle.js");
+
+/***/ }),
+
 /***/ "./node_modules/bootstrap/dist/js/bootstrap.bundle.js":
 /*!************************************************************!*\
   !*** ./node_modules/bootstrap/dist/js/bootstrap.bundle.js ***!
@@ -7254,7 +7264,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, ["assets/css/tailwind","assets/css/dashboard-kit/siaji","assets/plugins/bootstrap/bootstrap"], () => (__webpack_require__("./node_modules/bootstrap/dist/js/bootstrap.bundle.js")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/tailwind","assets/css/dashboard-kit/siaji","assets/plugins/bootstrap/bootstrap"], () => (__webpack_require__("./resources/assets/plugins/bootstrap/bootstrap.bundle.js")))
 /******/ 	__webpack_require__.O(undefined, ["assets/css/tailwind","assets/css/dashboard-kit/siaji","assets/plugins/bootstrap/bootstrap"], () => (__webpack_require__("./node_modules/bootstrap/scss/bootstrap.scss")))
 /******/ 	__webpack_require__.O(undefined, ["assets/css/tailwind","assets/css/dashboard-kit/siaji","assets/plugins/bootstrap/bootstrap"], () => (__webpack_require__("./resources/assets/dashboard-kit/css/siaji.scss")))
 /******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["assets/css/tailwind","assets/css/dashboard-kit/siaji","assets/plugins/bootstrap/bootstrap"], () => (__webpack_require__("./resources/assets/css/tailwind.css")))

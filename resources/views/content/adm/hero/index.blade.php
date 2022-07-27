@@ -29,14 +29,14 @@
 @section('content')
     <div class="row">
         <div class="col-12 col-lg-4">
-            <form class="card" id="form" method="POST" action="{{ route('adm.hero.store') }}" enctype="multipart/form-data">
+            <form class="card tw__sticky tw__top-40" id="form" method="POST" action="{{ route('adm.hero.store') }}" enctype="multipart/form-data">
                 @csrf
                 @method('POST')
 
                 <div class="card-header">
                     <h5 class="card-title">Form (insert)</h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body tw__min-h-[405px] ">
                     <div class="form-group mb-4">
                         <label for="input-faction_id">Faction</label>
                         <select class="form-control" id="input-faction_id" name="faction_id" placeholder="Search for Faction">
@@ -72,7 +72,40 @@
                 <div class="card-header">
                     <h5 class="card-title">List</h5>
                 </div>
-                <div class="card-body" id="hero-container"></div>
+                <div class="card-body tw__max-h-[405px] tw__overflow-y-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Filter</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group tw__mb-4 md:tw__mb-0">
+                                        <label for="input_filter-faction_id">Faction</label>
+                                        <select class="form-control" id="input_filter-faction_id" name="faction_id" placeholder="Search for Faction">
+                                            <option value="">Search for Faction</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-group tw__mb-4 md:tw__mb-0">
+                                        <label for="input_filter-faction_id">Class</label>
+                                        <select class="form-control" id="input_filter-class_id" name="class_id" placeholder="Search for Class">
+                                            <option value="">Search for Class</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group tw__mt-4 tw__mb-0">
+                                        <label>Name</label>
+                                        <input type="text" class="form-control" id="input_filter-name" placeholder="Hero Name">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="hero-container"></div>
+                </div>
                 <div class="card-footer">
                     <button type="button" class="btn btn-primary btn-sm page-control tw__flex tw__items-center tw__gap-1" id="btn-load_more" data-page="1" onclick="fetchData(1)"><i class="fa-solid fa-arrows-rotate"></i> Load More</button>
                 </div>
@@ -152,6 +185,88 @@
             });
         }
     </script>
+    {{-- Choices Filter --}}
+    <script>
+        // Faction Choices
+        var factionChoiceFilter = null;
+        if(document.getElementById('input_filter-faction_id')){
+            const factionElFilter = document.getElementById('input_filter-faction_id');
+            factionChoiceFilter = new Choices(factionElFilter, {
+                allowHTML: true,
+                searchEnabled: false,
+                removeItemButton: true,
+                searchPlaceholderValue: "Search for Faction",
+                placeholder: true,
+                placeholderValue: 'Search for Faction',
+                shouldSort: false
+            });
+            factionChoiceFilter.setChoices(() => {
+                // console.log(e);
+                return fetch(
+                    `{{ route('adm.json.hero.faction.list') }}`
+                )
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    return data.data.map(function(result) {
+                        return {
+                            value: result.uuid,
+                            label: `<span class=" tw__flex tw__items-center tw__gap-1">${result.icon ? `<img src="{{ asset('') }}/${result.icon}" class="tw__h-4">` : ''}${result.name}</span>`
+                        };
+                    });
+                });
+            });
+            factionChoiceFilter.passedElement.element.addEventListener('change', (e) => {
+                fetchData(1);
+            });
+        }
+        // Class Choices
+        var classChoiceFilter = null;
+        if(document.getElementById('input_filter-class_id')){
+            const classElFilter = document.getElementById('input_filter-class_id');
+            classChoiceFilter = new Choices(classElFilter, {
+                allowHTML: true,
+                searchEnabled: false,
+                removeItemButton: true,
+                searchPlaceholderValue: "Search for Class",
+                placeholder: true,
+                placeholderValue: 'Search for Class',
+                shouldSort: false
+            });
+            classChoiceFilter.setChoices(() => {
+                // console.log(e);
+                return fetch(
+                    `{{ route('adm.json.hero.class.list') }}`
+                )
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    return data.data.map(function(result) {
+                        return {
+                            value: result.uuid,
+                            label: `<span class=" tw__flex tw__items-center tw__gap-1">${result.icon ? `<img src="{{ asset('') }}/${result.icon}" class="tw__h-4">` : ''}${result.name}</span>`
+                        };
+                    });
+                });
+            });
+            classChoiceFilter.passedElement.element.addEventListener('change', (e) => {
+                fetchData(1);
+            });
+        }
+
+        if(document.getElementById('input_filter-name')){
+            let searchTimeout = null;
+
+            document.getElementById('input_filter-name').addEventListener('keyup', (e) => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    fetchData(1);
+                }, 600);
+            });
+        }
+    </script>
 
     <script>
         const fetchData = (page = 1) => {
@@ -172,6 +287,15 @@
                 url.searchParams.append('limit', 5);
                 url.searchParams.append('force_order_column', 'name');
                 url.searchParams.append('force_order', 'asc');
+                if(document.getElementById('input_filter-name')){
+                    url.searchParams.append('search', document.getElementById('input_filter-name').value);
+                }
+                if(factionChoiceFilter){
+                    url.searchParams.append('filter_faction_id', document.getElementById('input_filter-faction_id').value);
+                }
+                if(classChoiceFilter){
+                    url.searchParams.append('filter_class_id', document.getElementById('input_filter-class_id').value);
+                }
                 fetch(url)
                     .then((response) => {
                         if(page === parseInt(1)){
@@ -209,7 +333,7 @@
                                 content.innerHTML = `
                                     <div class=" tw__flex tw__gap-2 tw__flex-col">
                                         ${val.avatar ? `<img src="{{ asset('') }}/${val.avatar}" alt="${val.name}" class="tw__h-5">` : ''}
-                                        <span class="tw__text-base tw__font-bold">${val.name}</span>
+                                        <span class="tw__text-base tw__font-bold tw__flex tw__items-center tw__gap-1">${val.tenant && val.tenant.length > 0 ? '<i class="fa-solid fa-crown" alt="Homeowner"></i>' : ''}${val.name}</span>
                                         <small class="tw__flex tw__items-center tw__gap-1">${smallInformation.join('<span>/</span>')}</small>
                                     </div>
 
@@ -224,7 +348,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="dropdown-item" href="{{ route('adm.hero.faction.index') }}/${val.uuid}">
+                                                <a class="dropdown-item" href="{{ route('adm.hero.index') }}/${val.uuid}">
                                                     <span class=" tw__flex tw__items-center"><i class="fa-solid fa-eye"></i>Show</span>
                                                 </a>
                                             </li>

@@ -168,7 +168,8 @@ class HeroClassController extends Controller
     {
         $data_limit = $request->limit ?? 10;
 
-        $data = $this->classModel->query();
+        $data = $this->classModel->query()
+            ->withCount('hero');
         $last_page = null;
         if ($request->has('search') && $request->search != '') {
             // Apply search param

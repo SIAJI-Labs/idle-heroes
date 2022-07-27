@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Hero extends Model
+class HeroTenant extends Model
 {
     use HasFactory;
 
@@ -16,10 +16,9 @@ class Hero extends Model
      * @var array
      */
     protected $fillable = [
-        'faction_id',
-        'class_id',
-        'name',
-        'avatar'
+        'hero_id',
+        'tenant_hero_id',
+        'slot'
     ];
 
     /**
@@ -55,28 +54,19 @@ class Hero extends Model
      * 
      * @return model
      */
-    public function homeowner()
-    {
-        return $this->hasMany(\App\Models\HeroTenant::class, 'tenant_hero_id');
-    }
-    public function tenant()
-    {
-        return $this->hasMany(\App\Models\HeroTenant::class, 'hero_id')
-            ->orderBy('slot', 'asc');
-    }
 
     /**
      * Foreign Key Relation
      * 
      * @return model
      */
-    public function heroFaction()
+    public function homeowner()
     {
-        return $this->belongsTo(\App\Models\HeroFaction::class, 'faction_id');
+        return $this->belongsTo(\App\Models\Hero::class, 'hero_id');
     }
-    public function heroClass()
+    public function tenant()
     {
-        return $this->belongsTo(\App\Models\HeroClass::class, 'class_id');
+        return $this->belongsTo(\App\Models\Hero::class, 'tenant_hero_id');
     }
 
     /**

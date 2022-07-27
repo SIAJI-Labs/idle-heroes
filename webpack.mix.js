@@ -20,7 +20,7 @@ mix.postCss("resources/assets/css/tailwind.css", "public/assets/css", [
 ]).version();
 // Bootstrap
 mix.sass('node_modules/bootstrap/scss/bootstrap.scss', 'public/assets/plugins/bootstrap').version();
-mix.js('node_modules/bootstrap/dist/js/bootstrap.bundle.js', 'public/assets/plugins/bootstrap').version();
+mix.js('resources/assets/plugins/bootstrap/bootstrap.bundle.js', 'public/assets/plugins/bootstrap').version();
 
 /**
  * Plugins
@@ -33,6 +33,9 @@ mix.js('resources/assets/plugins/moment-js/moment.js', 'public/assets/plugins/mo
 mix.copy('node_modules/choices.js/public/assets/scripts/choices.min.js', 'public/assets/plugins/choices/choices.js').version();
 mix.copy('node_modules/choices.js/public/assets/styles/base.min.css', 'public/assets/plugins/choices/base.css').version();
 mix.copy('node_modules/choices.js/public/assets/styles/choices.min.css', 'public/assets/plugins/choices/choices.css').version();
+// Select2
+mix.copy('node_modules/sweetalert2/dist/sweetalert2.all.min.js', 'public/assets/plugins/sweetalert2').version();
+mix.copy('node_modules/sweetalert2/dist/sweetalert2.min.css', 'public/assets/plugins/sweetalert2').version();
 
 /**
  * Fonts

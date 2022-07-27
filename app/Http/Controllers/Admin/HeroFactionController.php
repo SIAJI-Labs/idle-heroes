@@ -168,7 +168,8 @@ class HeroFactionController extends Controller
     {
         $data_limit = $request->limit ?? 10;
 
-        $data = $this->factionModel->query();
+        $data = $this->factionModel->query()
+            ->withCount('hero');
         $last_page = null;
         if ($request->has('search') && $request->search != '') {
             // Apply search param

@@ -29,7 +29,7 @@
 @section('content')
     <div class="row">
         <div class="col-12 col-lg-4">
-            <form class="card" id="form" method="POST" action="{{ route('adm.hero.class.store') }}" enctype="multipart/form-data">
+            <form class="card tw__sticky tw__top-40" id="form" method="POST" action="{{ route('adm.hero.class.store') }}" enctype="multipart/form-data">
                 @csrf
                 @method('POST')
 
@@ -104,11 +104,16 @@
 
                         if(data.length > 0){
                             data.forEach((val, index) => {
+                                console.log(val);
+
                                 content.classList.add('tw__p-4', 'tw__my-4', 'first:tw__mt-0', 'last:tw__mb-0', 'tw__bg-gray-100', 'tw__rounded-lg', 'tw__w-full', 'tw__flex');
                                 content.innerHTML = `
-                                    <div class=" tw__flex tw__items-center tw__gap-2">
-                                        ${val.icon ? `<img src="{{ asset('') }}/${val.icon}" alt="${val.name}" class="tw__h-5">` : ''}
-                                        <span>${val.name}</span>
+                                    <div class=" tw__flex tw__flex-col">
+                                        <div class=" tw__flex tw__items-center tw__gap-2">
+                                            ${val.icon ? `<img src="{{ asset('') }}/${val.icon}" alt="${val.name}" class="tw__h-5">` : ''}
+                                            <span>${val.name}</span>
+                                        </div>
+                                        <small>Hero count: ${val.hero_count}</small>
                                     </div>
 
                                     <div class="tw__ml-auto dropdown dropstart tw__leading-none tw__flex tw__items-baseline">
