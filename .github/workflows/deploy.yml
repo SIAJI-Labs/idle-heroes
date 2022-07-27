@@ -21,3 +21,45 @@ jobs:
             whoami
             pwd
             echo "========= Github Action for Pulling Data"
+            cd ~/public_html/idle-heroes/main-apps
+            git checkout main
+            git reset --hard
+            git pull origin main
+            # Copy Remote .env
+            cp .env.remote .env
+  deploy:
+    name: Deploy App
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Github Action via SSH (to Hosting)
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            whoami
+            pwd
+            echo "========= Sync Public Directory (Except index.php, etc)"
+            cd ~/public_html/idle-heroes
+            rm -rf assets mix-manifest.json
+            cd ~/public_html/idle-heroes/main-apps
+            shopt -s extglob
+            mv ~/public_html/idle-heroes/main-apps/public/!(index.php|files|.htaccess) ~/public_html/idle-heroes
+      - name: Cleaning Cache, etc
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            whoami
+            pwd
+            cd ~/public_html/idle-heroes/main-apps
+            echo "========= Clear Laravel Cache"
+            php artisan config:clear
+            php artisan cache:clear
+            php artisan view:clear
