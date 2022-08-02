@@ -8,7 +8,7 @@
                 {{-- <img src="{{ asset('assets/img/dashboard-kit/logo.svg') }}" alt="" class="logo logo-lg"> --}}
             </a>
         </div>
-        <div class="navbar-content tw__max-h-[calc(100vh-70px)] tw__overflow-y-scroll">
+        <div class="navbar-content tw__max-h-[calc(100vh-70px)] tw__overflow-y-scroll tw__inline">
             <ul class="pc-navbar">
                 @if (isset($provMenu) && is_array($provMenu) && count($provMenu) > 0)
                     @foreach ($provMenu as $menuGroup)

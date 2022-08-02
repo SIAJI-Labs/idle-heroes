@@ -43,6 +43,24 @@ Route::group([
         'index', 'store', 'update', 'show'
     ]);
 
+    // Game Mode
+    Route::group([
+        'prefix' => 'game-mode',
+        'as' => 'game-mode.'
+    ], function(){
+        // Guild War
+        Route::resource('guild-war', \App\Http\Controllers\System\GameMode\GuildWarController::class);
+        // Star Expedition - Map
+        Route::group([
+            'prefix' => 'star-expedition',
+            'as' => 'star-expedition.'
+        ], function(){
+            // Map Clearance
+            Route::resource('map', \App\Http\Controllers\System\GameMode\StarExpeditionMapController::class);
+        });
+        Route::resource('star-expedition', \App\Http\Controllers\System\GameMode\StarExpeditionController::class);
+    });
+
     // JSON
     Route::group([
         'prefix' => 'json',
@@ -54,5 +72,17 @@ Route::group([
         Route::get('guild', [\App\Http\Controllers\System\GuildController::class, 'jsonList'])->name('guild.list');
         // Player
         Route::get('player', [\App\Http\Controllers\System\PlayerController::class, 'jsonList'])->name('player.list');
+
+        // Game Mode
+        Route::group([
+            'prefix' => 'game-mode',
+            'as' => 'game-mode.'
+        ], function(){
+            // Guild War
+            Route::get('guild-war', [\App\Http\Controllers\System\GameMode\GuildWarController::class, 'jsonList'])->name('guild-war.list');
+
+            // Period
+            Route::get('period', [\App\Http\Controllers\System\GameMode\PeriodController::class, 'jsonList'])->name('period.list');
+        });
     });
 });

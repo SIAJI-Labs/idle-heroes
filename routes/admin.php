@@ -44,6 +44,15 @@ Route::group([
         });
         Route::resource('hero', \App\Http\Controllers\Admin\HeroController::class);
 
+        // Game Mode
+        Route::group([
+            'prefix' => 'game-mode',
+            'as' => 'game-mode.'
+        ], function(){
+            // Periode
+            Route::resource('period', \App\Http\Controllers\Admin\PeriodController::class);
+        });
+
         // Log Viewer
         Route::get('log-viewer', \App\Http\Controllers\Admin\LogViewerController::class)->name('log-viewer.index');
 
@@ -63,6 +72,15 @@ Route::group([
                 Route::get('class', [\App\Http\Controllers\Admin\HeroClassController::class, 'jsonList'])->name('class.list');
             });
             Route::get('hero', [\App\Http\Controllers\Admin\HeroController::class, 'jsonList'])->name('hero.list');
+
+            // Game Mode
+            Route::group([
+                'prefix' => 'game-mode',
+                'as' => 'game-mode.'
+            ], function(){
+                // Periode
+                Route::get('period', [\App\Http\Controllers\Admin\PeriodController::class, 'jsonList'])->name('period.list');
+            });
         });
     });
 });

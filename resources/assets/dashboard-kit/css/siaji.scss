@@ -27,6 +27,14 @@ html, body {
         }
     }
 
+    // Plugins
+    // Flatpickr
+    .flatpickr-day {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+    }
+
     // Footer
     .footer {
         bottom: 0;

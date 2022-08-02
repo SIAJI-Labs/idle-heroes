@@ -66,6 +66,18 @@ class ViewAdminServiceProvider extends ServiceProvider
                         ], 
                     ],
                 ], [
+                    'name' => 'Game Mode',
+                    'description' => null,
+                    'menu' => [
+                        [
+                            'name' => 'Period',
+                            'route' => route('adm.game-mode.period.index'),
+                            'icon' => '<i class="fa-solid fa-clock"></i>',
+                            'active_key' => 'period',
+                            'submenu' => null
+                        ]
+                    ]
+                ], [
                     'name' => 'Developer',
                     'description' => null,
                     'menu' => [

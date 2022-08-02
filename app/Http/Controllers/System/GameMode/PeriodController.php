@@ -1,22 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\System;
+namespace App\Http\Controllers\System\GameMode;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class GuildController extends Controller
+class PeriodController extends Controller
 {
-    protected $guildModel;
-    protected $associationModel;
+    protected $periodTable;
 
     /**
      * Run this function on load
      */
     public function __construct()
     {
-        $this->guildModel = new \App\Models\Guild();
-        $this->associationModel = new \App\Models\Association();
+        $this->periodTable = new \App\Models\Period();
     }
 
     /**
@@ -26,7 +24,7 @@ class GuildController extends Controller
      */
     public function index()
     {
-        return view('content.system.guild.index');
+        //
     }
 
     /**
@@ -47,28 +45,7 @@ class GuildController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'association_id' => ['required', 'string', 'exists:'.$this->associationModel->getTable().',uuid'],
-            'name' => ['required', 'string', 'max:191'],
-            'guild_id' => ['nullable', 'string', 'max:191']
-        ]);
-
-        \DB::transaction(function () use ($request) {
-            $association = $this->associationModel->where(\DB::raw('BINARY `uuid`'), $request->association_id)
-                ->where('user_id', \Auth::user()->id)
-                ->firstOrFail();
-
-            $data = $this->guildModel;
-            $data->association_id = $association->id;
-            $data->name = $request->name;
-            $data->guild_id = $request->guild_id;
-            $data->save();
-        });
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Data Stored'
-        ]);
+        //
     }
 
     /**
@@ -79,15 +56,7 @@ class GuildController extends Controller
      */
     public function show($id)
     {
-        $data = $this->guildModel->with('association')->where(\DB::raw('BINARY `uuid`'), $id)
-            ->whereHas('association', function($q){
-                return $q->where('user_id', \Auth::user()->id);
-            })
-            ->firstOrFail();
-
-        return view('content.system.guild.show', [
-            'data' => $data
-        ]);
+        //
     }
 
     /**
@@ -130,17 +99,11 @@ class GuildController extends Controller
     public function jsonList(Request $request)
     {
         $data_limit = $request->limit ?? 10;
-
-        $data = $this->guildModel->query()
-            ->with('association')
-            ->withCount('guildMember')
-            ->whereHas('association', function($q){
-                return $q->where('user_id', \Auth::user()->id);
-            });
+        $data = $this->periodTable->query();
         $last_page = null;
         if ($request->has('search') && $request->search != '') {
             // Apply search param
-            $data = $data->where('name', 'like', '%'.$request->search.'%');
+            $data = $data->where('datetime', 'like', '%'.$request->search.'%');
         }
 
         if ($request->has('page')) {
@@ -156,7 +119,7 @@ class GuildController extends Controller
             'status' => 'success',
             'message' => 'Data Fetched',
             'last_page' => $last_page,
-            'data' => $data->orderBy('name', 'asc')->get(),
+            'data' => $data->orderBy('datetime', 'desc')->get(),
         ]);
     }
 }

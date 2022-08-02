@@ -24,6 +24,11 @@ html, body {
 .siaji-dashboard-kit .dropstart ::before {
   display: none;
 }
+.siaji-dashboard-kit .flatpickr-day {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
 .siaji-dashboard-kit .footer {
   bottom: 0;
   padding: 20px 10px;

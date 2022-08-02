@@ -1,8 +1,9 @@
 {
     "/assets/plugins/bootstrap/bootstrap.bundle.js": "/assets/plugins/bootstrap/bootstrap.bundle.js?id=afb8bdd7f2a8b05ea257b336a9a09ede",
     "/assets/plugins/moment/moment.js": "/assets/plugins/moment/moment.js?id=dde9f9fcd448632582323cbfd2ed52e2",
-    "/assets/css/tailwind.css": "/assets/css/tailwind.css?id=a401d870ef8d2dffe820777279a03991",
-    "/assets/css/dashboard-kit/siaji.css": "/assets/css/dashboard-kit/siaji.css?id=f0755e8c59abec024511c266596914f9",
+    "/assets/plugins/flatpickr/flatpickr.js": "/assets/plugins/flatpickr/flatpickr.js?id=e938a7aa59771731feb7f1e9110c7b89",
+    "/assets/css/tailwind.css": "/assets/css/tailwind.css?id=4a5f97566b5e54569fe770e8184227be",
+    "/assets/css/dashboard-kit/siaji.css": "/assets/css/dashboard-kit/siaji.css?id=a347e02eb1ec80f4e5e084dad8ade8e6",
     "/assets/plugins/bootstrap/bootstrap.css": "/assets/plugins/bootstrap/bootstrap.css?id=1aecbaa3ddc184a0443c87f2383fd1cc",
     "/assets/plugins/axios/axios.js": "/assets/plugins/axios/axios.js?id=75b931d1d8c1b24fb6bf9b32c80bf1bb",
     "/assets/plugins/choices/choices.js": "/assets/plugins/choices/choices.js?id=f1c1c3c89c2eedc7ef35abd9d18cb0f4",
@@ -10,6 +11,7 @@
     "/assets/plugins/choices/choices.css": "/assets/plugins/choices/choices.css?id=5c65c469543e1c2dfb0046db039d2ae2",
     "/assets/plugins/sweetalert2/sweetalert2.all.min.js": "/assets/plugins/sweetalert2/sweetalert2.all.min.js?id=57aff405e63b032e84b1e5acc6450460",
     "/assets/plugins/sweetalert2/sweetalert2.min.css": "/assets/plugins/sweetalert2/sweetalert2.min.css?id=70496681a0ffc933bca038e294d133ca",
+    "/assets/plugins/flatpickr/flatpickr.min.css": "/assets/plugins/flatpickr/flatpickr.min.css?id=d5a8fe5612330fee581d3f83b37ef858",
     "/assets/fonts/fontawesome/LICENSE.txt": "/assets/fonts/fontawesome/LICENSE.txt?id=57f9201afe70f877988912a7b233de47",
     "/assets/fonts/fontawesome/all.css": "/assets/fonts/fontawesome/all.css?id=bce1671a196eb46f5ef96c87a65e4222",
     "/assets/fonts/fontawesome/all.js": "/assets/fonts/fontawesome/all.js?id=d07887ba97e7c2664cc5dafd3e95077c",
@@ -2182,5 +2184,6 @@
     "/assets/js/dashboard-kit/plugins/bootstrap.min.js": "/assets/js/dashboard-kit/plugins/bootstrap.min.js?id=06062de73f2050d08eebb93e0e5af53e",
     "/assets/js/dashboard-kit/plugins/feather.min.js": "/assets/js/dashboard-kit/plugins/feather.min.js?id=199d840e1af3952233f1756b75a9b1dd",
     "/assets/js/dashboard-kit/plugins/gmaps.min.js": "/assets/js/dashboard-kit/plugins/gmaps.min.js?id=b8b608f1809a432a6531021265dbe5d7",
-    "/assets/js/dashboard-kit/plugins/perfect-scrollbar.min.js": "/assets/js/dashboard-kit/plugins/perfect-scrollbar.min.js?id=4707a5fde2e52a52c114cdad148fcb39"
+    "/assets/js/dashboard-kit/plugins/perfect-scrollbar.min.js": "/assets/js/dashboard-kit/plugins/perfect-scrollbar.min.js?id=4707a5fde2e52a52c114cdad148fcb39",
+    "/assets/js/dashboard-kit/function.js": "/assets/js/dashboard-kit/function.js?id=9240cc8159ccab7323e53a1347ab69f4"
 }

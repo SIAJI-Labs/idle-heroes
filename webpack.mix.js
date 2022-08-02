@@ -36,6 +36,9 @@ mix.copy('node_modules/choices.js/public/assets/styles/choices.min.css', 'public
 // Select2
 mix.copy('node_modules/sweetalert2/dist/sweetalert2.all.min.js', 'public/assets/plugins/sweetalert2').version();
 mix.copy('node_modules/sweetalert2/dist/sweetalert2.min.css', 'public/assets/plugins/sweetalert2').version();
+// Flatpickr
+mix.js('resources/assets/plugins/flatpickr/flatpickr.js', 'public/assets/plugins/flatpickr').version();
+mix.copy('node_modules/flatpickr/dist/flatpickr.min.css', 'public/assets/plugins/flatpickr').version();
 
 /**
  * Fonts
@@ -73,4 +76,6 @@ mix.copy('resources/assets/dashboard-kit/js/pcoded.js', 'public/assets/js/dashbo
 mix.copy('resources/assets/dashboard-kit/js/script.js', 'public/assets/js/dashboard-kit').version();
 mix.copy('resources/assets/dashboard-kit/js/siaji.js', 'public/assets/js/dashboard-kit').version();
 mix.copy('resources/assets/dashboard-kit/js/vendor-all.min.js', 'public/assets/js/dashboard-kit').version();
+mix.copy('resources/assets/dashboard-kit/js/siaji.js', 'public/assets/js/dashboard-kit').version();
 mix.copy('resources/assets/dashboard-kit/js/plugins', 'public/assets/js/dashboard-kit/plugins').version();
+mix.copy('resources/assets/dashboard-kit/js/function.js', 'public/assets/js/dashboard-kit').version();

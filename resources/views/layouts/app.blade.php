@@ -169,6 +169,7 @@
 
             <script src="{{ mix('assets/js/dashboard-kit/script.js') }}"></script>
             <script src="{{ mix('assets/js/dashboard-kit/siaji.js') }}"></script>
+            <script src="{{ mix('assets/js/dashboard-kit/function.js') }}"></script>
         @endif
 
         <!-- Axios -->
@@ -180,6 +181,11 @@
         <!-- Fontawesome -->
         <script src="{{ mix('assets/fonts/fontawesome/all.min.js') }}"></script>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                applyTimezoneField();
+            });
+        </script>
         @yield('js_plugins')
         @yield('js_inline')
     </body>

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Guild extends Model
+class Period extends Model
 {
     use HasFactory;
 
@@ -16,9 +16,9 @@ class Guild extends Model
      * @var array
      */
     protected $fillable = [
-        'association_id',
-        'name',
-        'guild_id'
+        'date',
+        'length',
+        'timezone_offset'
     ];
 
     /**
@@ -54,14 +54,9 @@ class Guild extends Model
      * 
      * @return model
      */
-    public function guildMember()
-    {
-        return $this->hasMany(\App\Models\GuildMember::class, 'guild_id')
-            ->whereNull('out');
-    }
     public function guildWar()
     {
-        return $this->hasMany(\App\Models\GuildWar::class, 'guild)id');
+        return $this->hasMany(\App\Models\GuildWar::class, 'period_id');
     }
 
     /**
@@ -69,10 +64,6 @@ class Guild extends Model
      * 
      * @return model
      */
-    public function association()
-    {
-        return $this->belongsTo(\App\Models\Association::class, 'association_id');
-    }
 
     /**
      * The "boot" method of the model.
@@ -87,6 +78,25 @@ class Guild extends Model
         static::creating(function ($model) {
             // Always generate UUID on Data Create
             $model->{'uuid'} = (string) Str::uuid();
+        });
+
+        // Listen to Saving Event
+        static::saving(function ($model) {
+            // \Log::debug("Debug on Saving function - before changing", [
+            //     'datetime' => $model->datetime,
+            //     'timezone' => env('APP_TIMEZONE_OFFSET')
+            // ]);
+            // Convert UTC to Server Timezone
+            $model->date = date('Y-m-d', strtotime(convertToUtc($model->datetime, env('APP_TIMEZONE_OFFSET'), false)));
+            $model->time = date('H:i:s', strtotime(convertToUtc($model->datetime, env('APP_TIMEZONE_OFFSET'), false)));
+            $model->datetime = date('Y-m-d H:i:s', strtotime(convertToUtc($model->datetime, env('APP_TIMEZONE_OFFSET'), false)));
+            // \Log::debug("Debug on Saving function - after changing", [
+            //     'datetime' => $model->datetime,
+            //     'timezone' => env('APP_TIMEZONE_OFFSET')
+            // ]);
+            if (empty($model->timezone_offset)) {
+                $model->timezone_offset = env('APP_TIMEZONE_OFFSET');
+            }
         });
     }
 }
