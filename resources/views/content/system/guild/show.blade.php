@@ -125,6 +125,7 @@
                                     <button type="button" class="btn btn-sm btn-primary tw__flex tw__items-center tw__gap-1" onclick="transferPlayer('${val.uuid}', 'join')"><i class="fa-solid fa-check"></i>Add</button>
                                 `;
                                 container.appendChild(content);
+                                content = document.createElement('div');
                             });
                         } else {
                             content.classList.add('alert', 'alert-primary', 'tw__mb-0');
