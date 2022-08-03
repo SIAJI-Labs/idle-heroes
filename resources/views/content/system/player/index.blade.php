@@ -215,8 +215,8 @@
                 // Reset Action URL
                 form.setAttribute('action', '{{ route('s.player.store') }}');
                 // Set Method
-                if(form.querySelector('input[name="_token"]')){
-                    form.querySelector('input[name="_token"]').value = 'POST';
+                if(form.querySelector('input[name="_method"]')){
+                    form.querySelector('input[name="_method"]').value = 'POST';
                 }
                 // Reset Association
                 if(associationChoice){
