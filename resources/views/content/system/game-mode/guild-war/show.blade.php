@@ -340,7 +340,7 @@
                     form.querySelector('.card-title').innerHTML = 'Add new Participant';
                 }
                 // Reset Action URL
-                form.setAttribute('action', '{{ route('s.game-mode.guild-war.store') }}');
+                form.setAttribute('action', '{{ route('s.game-mode.guild-war.participation.store') }}');
                 // Set Method
                 if(form.querySelector('input[name="_method"]')){
                     form.querySelector('input[name="_method"]').value = 'POST';
