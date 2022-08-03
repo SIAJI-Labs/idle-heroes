@@ -53,6 +53,10 @@ class GuildWar extends Model
      * 
      * @return model
      */
+    public function guildWarParticipation()
+    {
+        return $this->hasMany(\App\Models\GuildWarParticipation::class, 'guild_war_id');
+    }
 
     /**
      * Foreign Key Relation

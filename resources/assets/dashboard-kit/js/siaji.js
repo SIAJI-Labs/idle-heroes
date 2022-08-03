@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
     
     setTimeout(() => {
         let datatableWrapper = document.querySelectorAll('.dataTables_wrapper');
+        console.log(datatableWrapper);
         datatableWrapper.forEach((el) => {
             let pageLength = el.querySelector('.dataTables_length');
             let search = el.querySelector('.dataTables_filter');
@@ -72,33 +73,5 @@ const generateTooltip = () => {
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'))
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-}
-
-let hideBalanceEl = document.getElementById('control-hide_balance');
-if(hideBalanceEl){
-    hideBalanceEl.addEventListener('change', (e) => {
-        let state = e.target.checked;
-        console.log("Hide Balance is running");
-        localStorage.setItem( 'SPTRA_hidebalance', state);
-
-        let metaToken = document.querySelector('meta[name="csrf-token"]');
-        let csrfToken = metaToken.getAttribute('content');
-        axios.post(`${user_preference}`, {
-            '_method': 'PUT',
-            '_token': csrfToken,
-            'key': 'hide-balance',
-            'value': state
-        }).then((response) => {
-            console.log(response);
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Action: Success',
-                text: 'Successfully update Hide Balance State. Please refresh page!',
-            }).then((e) => {
-                location.reload();
-            });
-        });
     });
 }

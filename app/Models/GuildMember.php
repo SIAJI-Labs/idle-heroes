@@ -55,6 +55,14 @@ class GuildMember extends Model
      * 
      * @return model
      */
+    public function guildWarParticipation()
+    {
+        return $this->hasMany(\App\Models\GuildWarParticipation::class, 'guild_member_id');
+    }
+    public function starExpeditionParticipation()
+    {
+        return $this->hasMany(\App\Models\StarExpeditionParticipation::class, 'guild_member_id');
+    }
 
     /**
      * Foreign Key Relation

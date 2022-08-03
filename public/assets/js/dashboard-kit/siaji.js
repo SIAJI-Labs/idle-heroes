@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
     
     setTimeout(() => {
         let datatableWrapper = document.querySelectorAll('.dataTables_wrapper');
+        console.log(datatableWrapper);
         datatableWrapper.forEach((el) => {
             let pageLength = el.querySelector('.dataTables_length');
             let search = el.querySelector('.dataTables_filter');

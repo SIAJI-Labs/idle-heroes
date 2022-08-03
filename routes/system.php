@@ -49,14 +49,21 @@ Route::group([
         'as' => 'game-mode.'
     ], function(){
         // Guild War
+        Route::group([
+            'prefix' => 'guild-war',
+            'as' => 'guild-war.'
+        ], function(){
+            // Participation
+            Route::resource('participation', \App\Http\Controllers\System\GameMode\GuildWarParticipationController::class);
+        });
         Route::resource('guild-war', \App\Http\Controllers\System\GameMode\GuildWarController::class);
-        // Star Expedition - Map
+        // Star Expedition
         Route::group([
             'prefix' => 'star-expedition',
             'as' => 'star-expedition.'
         ], function(){
-            // Map Clearance
-            Route::resource('map', \App\Http\Controllers\System\GameMode\StarExpeditionMapController::class);
+            // Participation
+            Route::resource('participation', \App\Http\Controllers\System\GameMode\StarExpeditionParticipationController::class);
         });
         Route::resource('star-expedition', \App\Http\Controllers\System\GameMode\StarExpeditionController::class);
     });
@@ -69,6 +76,13 @@ Route::group([
         // Association
         Route::get('association', [\App\Http\Controllers\System\AssociationController::class, 'jsonList'])->name('association.list');
         // Guild
+        Route::group([
+            'prefix' => 'guild',
+            'as' => 'guild.'
+        ], function(){
+            // Member
+            Route::get('member', [\App\Http\Controllers\System\GuildMemberController::class, 'jsonList'])->name('member.list');
+        });
         Route::get('guild', [\App\Http\Controllers\System\GuildController::class, 'jsonList'])->name('guild.list');
         // Player
         Route::get('player', [\App\Http\Controllers\System\PlayerController::class, 'jsonList'])->name('player.list');
@@ -79,7 +93,24 @@ Route::group([
             'as' => 'game-mode.'
         ], function(){
             // Guild War
+            Route::group([
+                'prefix' => 'guild-war',
+                'as' => 'guild-war.'
+            ], function(){
+                // Participant
+                Route::get('participant', [\App\Http\Controllers\System\GameMode\GuildWarParticipationController::class, 'jsonList'])->name('participant.list');
+            });
             Route::get('guild-war', [\App\Http\Controllers\System\GameMode\GuildWarController::class, 'jsonList'])->name('guild-war.list');
+
+            // Star Expedition
+            Route::group([
+                'prefix' => 'star-expedition',
+                'as' => 'star-expedition.'
+            ], function(){
+                // Participant
+                Route::get('participant', [\App\Http\Controllers\System\GameMode\StarExpeditionParticipationController::class, 'jsonList'])->name('participant.list');
+            });
+            Route::get('star-expedition', [\App\Http\Controllers\System\GameMode\StarExpeditionController::class, 'jsonList'])->name('star-expedition.list');
 
             // Period
             Route::get('period', [\App\Http\Controllers\System\GameMode\PeriodController::class, 'jsonList'])->name('period.list');

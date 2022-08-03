@@ -34,6 +34,322 @@ html, body {
         align-items: center;
         justify-content: center;
     }
+    // Datatable
+    .dataTable {
+        thead {
+            th {
+                position: relative;
+
+                &.sorting_desc, &.sorting_asc {
+                    background-image: unset !important;
+                }
+
+                &:not(.sorting_disabled){    
+                    &::before, &::after {
+                        position: absolute;
+                        content: "";
+                        height: 0;
+                        width: 0;
+                        right: 1rem;
+                        border-left: 4px solid transparent;
+                        border-right: 4px solid transparent;
+                        opacity: 0.2;
+                    }
+                    &::before {
+                        // Descending
+                        border-top: 4px solid #000;
+                        bottom: .75rem;
+                    } 
+                    &::after {
+                        // Ascending
+                        border-bottom: 4px solid #000;
+                        border-top: 4px solid transparent;
+                        top: .75rem;
+                    }
+    
+                    &.sorting_asc {
+                        &::after {
+                            opacity: .6;
+                        }
+                    }
+                    &.sorting_desc {
+                        &::before {
+                            opacity: .6;
+                        }
+                    }
+                }
+            }
+            
+        }
+        tbody {
+            tr {
+                &:first-child {
+                    td {
+                        border-top: unset;
+                    }
+                }
+
+                td {
+                    padding: 0.7rem 1.5rem;
+                }
+            }
+        }
+        &.no-footer {
+            border-bottom: unset !important;
+        }
+        &.dtr-inline {
+            &.collapsed {
+                .parent {
+                    .dtr-control {
+                        &::before {
+                            content: "-";
+                            background-color: #ffdcdc;
+                        }
+                    }
+                }
+                .dtr-control {
+                    position: relative;
+                    padding-left: 35px !important;
+                
+                    &::before {
+                        content: "+";
+                        display: block;
+                        position: absolute;
+                        top: 50%;
+                        left: 5px;
+                        transform: translateY(-50%);
+                        height: 1rem;
+                        width: 1rem;
+                        border-radius: .3rem;
+                        box-sizing: content-box;
+                        text-align: center;
+                        text-indent: 0 !important;
+                        line-height: 1rem;
+                        background-color: #f1f4f6;
+                        color: #000;
+                        padding: .15rem;
+                    }
+                }
+            }
+            .child {
+                li {
+                    margin-bottom: .5rem;
+                }
+                .dtr-title {
+                    display: block;
+                    font-weight: bold;
+                    min-width: 75px;
+                    font-size: 0.875rem !important;
+                }
+                .dtr-data {
+                    font-size: 0.875rem !important;
+                }
+            }
+        }
+    }
+
+    .card-body {
+        &.p-0 {
+            .sa-datatable-intro {
+                margin-top: .5rem !important;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                margin-bottom: .5rem !important;
+            }
+            .sa-datatable-info {
+                margin-top: .5rem !important;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                margin-bottom: .5rem !important;
+            }
+        }
+    }
+    .sa-datatable-intro {
+        display: grid !important;
+        align-items: center !important;
+        grid-auto-flow: row !important;
+        margin-bottom: 1rem;
+
+        label {
+            margin-bottom: unset;
+            text-align: left;
+        }
+
+        .dataTables_length {
+            label {
+                select {
+                    padding: 0.25rem 1rem 0.25rem .5rem;
+                    font-weight: 400;
+                    line-height: 1.5;
+                    color: #293240;
+                    vertical-align: middle;
+                    background-color: #ffffff;
+                    border: 2px solid #ced4da;
+                    border-radius: 4px;
+
+                    &:focus {
+                        border-color: #7267EF;
+                        outline: 0;
+                        box-shadow: 0 0 0 0.2rem rgb(114 103 239 / 25%);
+                    }
+                }
+            }
+        }
+        .dataTables_filter {
+            input {
+                padding: 0.5rem;
+                font-size: 0.875rem;
+                font-weight: 400;
+                line-height: 1.5;
+                color: #293240;
+                background-color: #ffffff;
+                background-clip: padding-box;
+                border: 1px solid #ced4da;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                border-radius: 4px;
+                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+                &:focus {
+                    border-color: #7267EF;
+                    outline: 0;
+                    box-shadow: 0 0 0 0.2rem rgb(114 103 239 / 25%);
+                }
+            }
+        }
+    }
+    @media (min-width: 768px) {
+        .sa-datatable-intro {
+            grid-auto-flow: column;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+    }
+    .sa-datatable-info {
+        display: grid !important;
+        align-items: center !important;
+        grid-auto-flow: row !important;
+        margin-top: 1rem;
+
+        .dataTables_info {
+            padding: unset !important;
+            font-size: .8rem;
+        }
+        .dataTables_paginate {
+            padding: unset !important;
+            display: flex;
+            align-items: center;
+            padding-left: 0;
+            list-style: none;
+            margin-left: auto;
+            margin-right: auto;
+
+            &.paging_input {
+                span {
+                    position: relative;
+                    padding: 0 .2rem;
+    
+                    &:first-child {
+                        border-radius: unset !important;
+                        border: unset !important;
+                    }
+                    &:last-child {
+                        border-radius: unset !important;
+                        border: unset !important;
+                    }
+                }
+                .paginate_input {
+                    border-top: 1px solid #9ca3af;
+                    border-bottom: 1px solid #9ca3af;
+                    margin-left: 1rem;
+                    margin-right: 1rem;
+                    width: 50px;
+                }
+            }
+            
+            .paginate_button, .ellipsis {
+                position: relative;
+                display: inline-block !important;
+                font-size: .8rem;
+                color: #1f2937 !important;
+                background-color: #fff !important;
+                margin: 0 !important;
+                padding: 0.5rem 1rem !important;
+                transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    
+                &:not(.disabled){
+                    &:hover {
+                        color: #fff !important;
+                        background: #9ca3af !important;
+                    }
+                }
+                &.current {
+                    color: #fff !important;
+                    background: #1f2937 !important;
+    
+                    &:hover {
+                        color: #fff !important;
+                        background: #1f2937 !important;
+                    }
+                }
+            }
+        }
+    }
+    @media (min-width: 1024px) {
+        .sa-datatable-info {
+            grid-auto-flow: column;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            .dataTables_paginate {
+                margin-right: unset;
+            }
+        }
+    }
+    .dataTables_info {
+        padding-left: unset !important;
+        font-size: .8rem;
+    }
+    .dataTables_paginate {
+        position: relative;
+
+        .paginate_button, .ellipsis {
+            position: relative;
+            display: inline-block !important;
+            font-size: .8rem;
+            color: #1f2937 !important;
+            background-color: #fff !important;
+            margin: 0 !important;
+            padding: 0.5rem 1rem !important;
+            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+
+            &:not(.disabled){
+                &:hover {
+                    color: #fff !important;
+                    background: #9ca3af !important;
+                }
+            }
+            &.current {
+                color: #fff !important;
+                background: #1f2937 !important;
+
+                &:hover {
+                    color: #fff !important;
+                    background: #1f2937 !important;
+                }
+            }
+        }
+    }
+
+    // Choices
+    .choices {
+        &[data-type*='select-one']{
+            .choices__inner {
+                padding-bottom: unset !important;
+            }
+        }
+        .choices__inner {
+            padding: 5.5px 7.5px 3.75px !important;
+        }
+    }
 
     // Footer
     .footer {

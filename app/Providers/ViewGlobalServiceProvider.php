@@ -39,7 +39,7 @@ class ViewGlobalServiceProvider extends ServiceProvider
             }
 
             // Ads
-            $ads = true;
+            $ads = env('APP_ADS', true);
             $view->with([
                 'provPreviousMenu' => $previousMenu,
                 'provAds' => $ads,

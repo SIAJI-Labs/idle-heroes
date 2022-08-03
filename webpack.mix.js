@@ -39,6 +39,18 @@ mix.copy('node_modules/sweetalert2/dist/sweetalert2.min.css', 'public/assets/plu
 // Flatpickr
 mix.js('resources/assets/plugins/flatpickr/flatpickr.js', 'public/assets/plugins/flatpickr').version();
 mix.copy('node_modules/flatpickr/dist/flatpickr.min.css', 'public/assets/plugins/flatpickr').version();
+// jQuery
+mix.js('resources/assets/plugins/jquery/jquery.js', 'public/assets/plugins/jquery').version();
+// Datatable
+mix.copy('node_modules/datatables.net-dt/css/jquery.dataTables.css', 'public/assets/plugins/datatable/css');
+mix.copy('node_modules/datatables.net-dt/images', 'public/assets/plugins/datatable/images');
+mix.copy('node_modules/datatables.net/js/jquery.dataTables.js', 'public/assets/plugins/datatable/datatable.js');
+mix.copy('node_modules/datatables.net-responsive/js/dataTables.responsive.js', 'public/assets/plugins/datatable');
+mix.copy('node_modules/datatables.net-responsive/js/dataTables.responsive.js', 'public/assets/plugins/datatable');
+mix.copy('node_modules/datatables.net-plugins/pagination', 'public/assets/plugins/datatable/plugins/pagination');
+mix.copy('node_modules/datatables.net-select/js/dataTables.select.min.js', 'public/assets/plugins/datatable/plugins/select');
+// iMask
+mix.js('resources/assets/plugins/iMask/iMask.js', 'public/assets/plugins/iMask');
 
 /**
  * Fonts

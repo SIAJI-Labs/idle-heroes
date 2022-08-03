@@ -91,17 +91,24 @@ class GuildWarController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $data = $this->guildWarModel->with('period', 'guild', 'guild.association')->where(\DB::raw('BINARY `uuid`'), $id)
+        $data = $this->guildWarModel->with('period', 'guild', 'guild.association')
+            ->where(\DB::raw('BINARY `uuid`'), $id)
             ->firstOrFail();
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Data Fetched',
-            'result' => [
-                'data' => $data
-            ]
+        if($request->ajax()){
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Fetched',
+                'result' => [
+                    'data' => $data
+                ]
+            ]);
+        }
+        
+        return view('content.system.game-mode.guild-war.show', [
+            'data' => $data
         ]);
     }
 

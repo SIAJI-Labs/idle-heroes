@@ -63,6 +63,10 @@ class Guild extends Model
     {
         return $this->hasMany(\App\Models\GuildWar::class, 'guild)id');
     }
+    public function starExpedition()
+    {
+        return $this->hasMany(\App\Models\StarExpedition::class, 'guild)id');
+    }
 
     /**
      * Foreign Key Relation

@@ -66,22 +66,10 @@ class ViewSystemServiceProvider extends ServiceProvider
                     'menu' => [
                         [
                             'name' => 'Star Expedition',
-                            'route' => null,
+                            'route' => route('s.game-mode.star-expedition.index'),
                             'icon' => '<i class="fa-brands fa-octopus-deploy"></i>',
                             'active_key' => 'star-expedition',
-                            'submenu' => [
-                                [
-                                    'name' => 'Map Clearance',
-                                    'route' => route('s.game-mode.star-expedition.map.index'),
-                                    'active_key' => 'star-expedition',
-                                    'active_sub' => 'map',
-                                ], [
-                                    'name' => 'Point',
-                                    'route' => route('s.game-mode.star-expedition.index'),
-                                    'active_key' => 'star-expedition',
-                                    'active_sub' => 'point',
-                                ], 
-                            ],
+                            'submenu' => null
                         ], [
                             'name' => 'Guild War',
                             'route' => route('s.game-mode.guild-war.index'),

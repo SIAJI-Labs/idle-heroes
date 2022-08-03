@@ -302,10 +302,8 @@
                         fetchData();
                     })
                     .catch(function (error) {
-                        console.log(error);
                         let error_data = error.response.data;
                         let errors = error_data.errors;
-                        console.log(errors);
                         
                         for (const [key, value] of Object.entries(errors)) {
                             let el = document.getElementById(`input-${key}`);
@@ -362,7 +360,7 @@
                                 content.innerHTML = `
                                     <div class=" tw__mb-2">
                                         <div class="tw__flex tw__items-center">
-                                            <span class="tw__text-base tw__font-bold tw__flex tw__items-center tw__gap-1">${val.guild.association.name} - ${val.guild.name}</span>
+                                            <span class="tw__text-base tw__flex tw__items-center tw__gap-1">${val.guild.association.name} - ${val.guild.name}</span>
                                         
                                             <div class="dropdown dropstart tw__leading-none tw__flex tw__ml-auto">
                                                 <button class="dropdown-toggle arrow-none" type="button" data-bs-auto-close="outside" id="dropdown-${index}" data-bs-toggle="dropdown" aria-expanded="false">
@@ -372,6 +370,11 @@
                                                     <li>
                                                         <a class="dropdown-item tw__text-yellow-400" href="javascript:void(0)" onclick="editData('${val.uuid}')">
                                                             <span class=" tw__flex tw__items-center"><i class="fa-solid fa-pen-to-square"></i>Edit</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('s.game-mode.guild-war.index') }}/${val.uuid}">
+                                                            <span class=" tw__flex tw__items-center"><i class="fa-solid fa-eye"></i>Show</span>
                                                         </a>
                                                     </li>
                                                 </ul>

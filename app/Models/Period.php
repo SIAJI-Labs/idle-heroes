@@ -58,6 +58,10 @@ class Period extends Model
     {
         return $this->hasMany(\App\Models\GuildWar::class, 'period_id');
     }
+    public function starExpedition()
+    {
+        return $this->hasMany(\App\Models\StarExpedition::class, 'period_id');
+    }
 
     /**
      * Foreign Key Relation

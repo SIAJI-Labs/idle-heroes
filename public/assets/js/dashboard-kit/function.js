@@ -2,6 +2,34 @@
 const APP_TIMEZONE = 'GMT+0700';
 
 /**
+ * Print Indonesia default amount format
+ * 
+ * @param {*} angka 
+ * @param {*} prefix 
+ * @returns 
+ */
+ function numberFormat(angka, prefix = 'Rp'){
+    let negative = angka < 0 ? true : false;
+
+    angka = Math.round(angka * 100) / 100;
+    let split = angka.toString().split('.');
+    let decimal = 0;
+    if(split.length > 1){
+        angka = split[0];
+        decimal = split[1];
+    }
+    var	reverse = angka.toString().split('').reverse().join(''),
+	rupiah 	= reverse.match(/\d{1,3}/g);
+    rupiah	= rupiah.join('.').split('').reverse().join('');
+
+    if(split.length > 1){
+        rupiah += `,${decimal}`;
+    }
+    
+    return `${(prefix == undefined ? `${negative ? '-' : ''}${rupiah}` : `${prefix} ${negative ? '-' : ''}${rupiah}`)}`;
+}
+
+/**
  * Apply timezone field to all form element
  * 
  */
