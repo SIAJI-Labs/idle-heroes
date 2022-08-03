@@ -171,6 +171,7 @@
                                     </div>
                                 `;
                                 container.appendChild(content);
+                                content = document.createElement('div');
                             });
                         } else {
                             content.classList.add('alert', 'alert-primary', 'tw__mb-0');
