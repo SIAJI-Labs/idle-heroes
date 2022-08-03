@@ -73,6 +73,9 @@
                             <h5 class="card-title">Guild member</h5>
                         </div>
                         <div class="card-body" id="guild-member"></div>
+                        <div class="card-footer">
+                            <button type="button" class="btn btn-primary btn-sm page-control tw__flex tw__items-center tw__gap-1" id="btn_member-load_more" data-page="1" onclick="fetchData(1)"><i class="fa-solid fa-arrows-rotate"></i> Load More</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -145,14 +148,14 @@
                         }
 
                         // Update Pagination
-                        if(document.getElementById('btn-load_more')){
+                        if(document.getElementById('btn_member-load_more')){
                             let nextPage = parseInt(page) + 1;
                             if(page === response.last_page){
-                                document.getElementById('btn-load_more').setAttribute('disabled', true);
+                                document.getElementById('btn_member-load_more').setAttribute('disabled', true);
                             } else {
-                                document.getElementById('btn-load_more').removeAttribute('disabled');
-                                document.getElementById('btn-load_more').setAttribute('onclick', `fetchData(${nextPage})`);
-                                document.getElementById('btn-load_more').dataset.page = nextPage;
+                                document.getElementById('btn_member-load_more').removeAttribute('disabled');
+                                document.getElementById('btn_member-load_more').setAttribute('onclick', `fetchData(${nextPage})`);
+                                document.getElementById('btn_member-load_more').dataset.page = nextPage;
                             }
                         }
                     });
