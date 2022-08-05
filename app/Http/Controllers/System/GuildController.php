@@ -77,13 +77,23 @@ class GuildController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $data = $this->guildModel->with('association')->where(\DB::raw('BINARY `uuid`'), $id)
             ->whereHas('association', function($q){
                 return $q->where('user_id', \Auth::user()->id);
             })
             ->firstOrFail();
+        
+        if($request->ajax()){
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Fetched',
+                'result' => [
+                    'data' => $data
+                ]
+            ]);
+        }
 
         return view('content.system.guild.show', [
             'data' => $data
@@ -110,7 +120,29 @@ class GuildController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'association_id' => ['required', 'string', 'exists:'.$this->associationModel->getTable().',uuid'],
+            'name' => ['required', 'string', 'max:191'],
+            'guild_id' => ['nullable', 'string', 'max:191']
+        ]);
+
+        \DB::transaction(function () use ($request, $id) {
+            $association = $this->associationModel->where(\DB::raw('BINARY `uuid`'), $request->association_id)
+                ->where('user_id', \Auth::user()->id)
+                ->firstOrFail();
+
+            $data = $this->guildModel->where(\DB::raw('BINARY `uuid`'), $id)
+                ->firstOrFail();
+            $data->association_id = $association->id;
+            $data->name = $request->name;
+            $data->guild_id = $request->guild_id;
+            $data->save();
+        });
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Data Updated'
+        ]);
     }
 
     /**

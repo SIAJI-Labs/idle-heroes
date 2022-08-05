@@ -68,11 +68,21 @@ class AssociationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $data = $this->associationModel->where(\DB::raw('BINARY `uuid`'), $id)
             ->where('user_id', \Auth::user()->id)
             ->firstOrFail();
+
+        if($request->ajax()){
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Fetched',
+                'result' => [
+                    'data' => $data
+                ]
+            ]);
+        }
 
         return view('content.system.association.show', [
             'data' => $data
@@ -99,7 +109,21 @@ class AssociationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string', 'max:191']
+        ]);
+
+        \DB::transaction(function () use ($request, $id) {
+            $data = $this->associationModel->where(\DB::raw('BINARY `uuid`'), $id)
+                ->firstOrFail();
+            $data->name = $request->name;
+            $data->save();
+        });
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Data Updated'
+        ]);
     }
 
     /**

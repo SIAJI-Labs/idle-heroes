@@ -178,6 +178,31 @@
         }
 
         if(document.getElementById('form')){
+            function editData(uuid){
+                axios.get(`{{ route('s.association.index') }}/${uuid}`)
+                    .then(function (response) {
+                        let result = response.data;
+                        let data = result.result.data;
+
+                        console.log(data);
+                        let form = document.getElementById("form");
+
+                        // Reset Title
+                        if(form.querySelector('.card-title')){
+                            form.querySelector('.card-title').innerHTML = 'Form (Update)';
+                        }
+                        // Reset Action URL
+                        form.setAttribute('action', `{{ route('s.association.index') }}/${data.uuid}`);
+                        // Set Method
+                        if(form.querySelector('input[name="_method"]')){
+                            form.querySelector('input[name="_method"]').value = 'PUT';
+                        }
+                        // Reset Name
+                        if(form.querySelector('input[name="name"]')){
+                            form.querySelector('input[name="name"]').value = data.name;
+                        }
+                    });
+            }
             document.getElementById('form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 console.log("Form is being submited");

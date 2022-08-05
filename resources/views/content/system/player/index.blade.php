@@ -235,6 +235,39 @@
         }
 
         if(document.getElementById('form')){
+            function editData(uuid){
+                axios.get(`{{ route('s.player.index') }}/${uuid}`)
+                    .then(function (response) {
+                        let result = response.data;
+                        let data = result.result.data;
+
+                        console.log(data);
+                        let form = document.getElementById("form");
+
+                        // Reset Title
+                        if(form.querySelector('.card-title')){
+                            form.querySelector('.card-title').innerHTML = 'Form (Update)';
+                        }
+                        // Reset Action URL
+                        form.setAttribute('action', `{{ route('s.player.index') }}/${data.uuid}`);
+                        // Set Method
+                        if(form.querySelector('input[name="_method"]')){
+                            form.querySelector('input[name="_method"]').value = 'PUT';
+                        }
+                        // Reset Association
+                        if(associationChoice){
+                            associationChoice.setChoiceByValue(data.association.uuid);
+                        }
+                        // Reset Name
+                        if(form.querySelector('input[name="name"]')){
+                            form.querySelector('input[name="name"]').value = data.name;
+                        }
+                        // Reset Identifier
+                        if(form.querySelector('input[name="player_id"]')){
+                            form.querySelector('input[name="player_id"]').value = data.player_identifier;
+                        }
+                    });
+            }
             document.getElementById('form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 console.log("Form is being submited");

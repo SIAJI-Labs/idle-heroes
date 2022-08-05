@@ -79,9 +79,23 @@ class PlayerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        $data = $this->playerModel->with('association')->where(\DB::raw('BINARY `uuid`'), $id)
+            ->whereHas('association', function($q){
+                return $q->where('user_id', \Auth::user()->id);
+            })
+            ->firstOrFail();
+
+        if($request->ajax()){
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Fetched',
+                'result' => [
+                    'data' => $data
+                ]
+            ]);
+        }
     }
 
     /**
@@ -104,7 +118,29 @@ class PlayerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'association_id' => ['required', 'string', 'exists:'.$this->associationModel->getTable().',uuid'],
+            'name' => ['required', 'string', 'max:191'],
+            'player_id' => ['nullable', 'string', 'max:191']
+        ]);
+
+        \DB::transaction(function () use ($request, $id) {
+            $association = $this->associationModel->where(\DB::raw('BINARY `uuid`'), $request->association_id)
+                ->where('user_id', \Auth::user()->id)
+                ->firstOrFail();
+
+            $data = $this->playerModel->where(\DB::raw('BINARY `uuid`'), $id)
+                ->firstOrFail();
+            $data->association_id = $association->id;
+            $data->name = $request->name;
+            $data->player_identifier = $request->player_id;
+            $data->save();
+        });
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Data Updated'
+        ]);
     }
 
     /**
