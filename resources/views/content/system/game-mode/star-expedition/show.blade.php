@@ -242,7 +242,8 @@
                 placeholderValue: 'Search for Registered Guild Member',
                 shouldSort: false
             });
-            memberProgressChoice.passedElement.element.addEventListener('showDropdown', (e) => {
+            function memberProgressChoiceFetch(memberProgressChoice){
+                
                 let placeholder = [
                     memberProgressChoice.setChoiceByValue('').getValue()
                 ];
@@ -265,11 +266,17 @@
                             });
                         });
                 });
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                memberProgressChoiceFetch(memberProgressChoice);
             });
         }
     </script>
     <script>
         const mapClearanceState = (el) => {
+            console.log(el);
+
             let parentRow = el.closest('td');
             let state = el.checked;
             if(state){
@@ -357,14 +364,14 @@
                             content = document.createElement('tr');
                             if(data.length > 0){
                                 data.forEach((val, index) => {
-                                    console.log(val);
+                                    // console.log(val);
 
                                     content.setAttribute('data-participant', val.uuid);
                                     content.setAttribute('id', `participant_row-${index}`);
 
                                     let checkbox = [];
                                     let checkboxIndex = ['1', '2', '3', '4', '5', '6', '7'];
-                                    checkboxIndex.forEach((ci) => {
+                                    checkboxIndex.forEach((ci, ciindex) => {
                                         let progressDate = val[`map_${ci}`];
                                         let extra = '';
                                         if(progressDate){
@@ -376,8 +383,8 @@
                                         checkbox.push(`
                                             <td>
                                                 <div class="form-check tw__mb-0">
-                                                    <input class="form-check-input se-map-checkbox" type="checkbox" id="map_${ci}-cleared" data-map="map_${ci}" data-participant="${val.uuid}" ${progressDate ? 'checked' : ''}>
-                                                    <label class="form-check-label" for="map_${ci}-cleared">
+                                                    <input class="form-check-input se-map-checkbox" type="checkbox" id="map_${ci}_${ciindex}_${index}-cleared" data-map="map_${ci}" data-participant="${val.uuid}" ${progressDate ? 'checked' : ''} onchange="mapClearanceState(this)">
+                                                    <label class="form-check-label" for="map_${ci}_${ciindex}_${index}-cleared">
                                                         Cleared
                                                     </label>
                                                 </div>
@@ -399,13 +406,13 @@
                                     container.appendChild(content);
                                     content = document.createElement('tr');
 
-                                    if(document.querySelectorAll('.se-map-checkbox').length > 0){
-                                        document.querySelectorAll('.se-map-checkbox').forEach((el) => {
-                                            el.addEventListener('change', (e) => {
-                                                mapClearanceState(e.target);
-                                            });
-                                        });
-                                    }
+                                    // if(document.querySelectorAll('.se-map-checkbox').length > 0){
+                                    //     document.querySelectorAll('.se-map-checkbox').forEach((el) => {
+                                    //         el.addEventListener('change', (e) => {
+                                    //             mapClearanceState(e.target);
+                                    //         });
+                                    //     });
+                                    // }
                                 });
 
                             } else {
@@ -520,6 +527,8 @@
                 if(document.getElementById('input-add_and_create')){
                     document.getElementById('input-add_and_create').checked = false;
                 }
+
+                memberProgressChoiceFetch(memberProgressChoice);
                 resetAction();
                 fetchData(1);
             });
@@ -617,6 +626,8 @@
             if(pointMask){
                 pointMask.value = '';
             }
+
+            memberProgressChoiceFetch(memberProgressChoice);
         }
         if(document.getElementById('form-point')){
 
