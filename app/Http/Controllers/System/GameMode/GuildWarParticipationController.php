@@ -198,12 +198,10 @@ class GuildWarParticipationController extends Controller
             'message' => 'Data Fetched',
             'last_page' => $last_page,
             'data' => $data->get()->map(function($data){
-                $data->day_1 = !empty($data->getProgress('day_1')) ? $data->getProgress('day_1') : null;
-                $data->day_2 = !empty($data->getProgress('day_2')) ? $data->getProgress('day_2') : null;
-                $data->day_3 = !empty($data->getProgress('day_3')) ? $data->getProgress('day_3') : null;
-                $data->day_4 = !empty($data->getProgress('day_4')) ? $data->getProgress('day_4') : null;
-                $data->day_5 = !empty($data->getProgress('day_5')) ? $data->getProgress('day_5') : null;
-                $data->day_6 = !empty($data->getProgress('day_6')) ? $data->getProgress('day_6') : null;
+                $days = [1, 2, 3, 4, 5, 6];
+                foreach($days as $day){
+                    $data['day_'.$day] = !empty($data->getProgress('day_'.$day)) ? $data->getProgress('day_'.$day) : null;
+                }
 
                 return $data;
             }),

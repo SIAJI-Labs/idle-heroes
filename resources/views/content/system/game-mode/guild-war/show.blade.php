@@ -215,8 +215,8 @@
                 memberProgressChoice.setChoices(placeholder);
                 memberProgressChoice.setChoices(() => {
                     // console.log(e);
-                    let url = new URL(`{{ route('s.json.game-mode.star-expedition.participant.list') }}`);
-                    url.searchParams.append('star_expedition_id', '{{ $data->uuid }}');
+                    let url = new URL(`{{ route('s.json.game-mode.guild-war.participant.list') }}`);
+                    url.searchParams.append('guild_war_id', '{{ $data->uuid }}');
                     return fetch(url)
                         .then(function(response) {
                             return response.json();

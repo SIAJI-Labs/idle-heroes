@@ -252,27 +252,16 @@ class StarExpeditionParticipationController extends Controller
             'last_page' => $last_page,
             'data' => $data->get()->map(function($data) use ($request){
                 if($request->has('progress_type') && $request->progress_type === 'map'){
-                    $data->map_1 = !empty($data->getProgress('map_1')) ? $data->getProgress('map_1') : null;
-                    $data->map_1_tz = !empty($data->getProgress('map_1', 'tz')) ? $data->getProgress('map_1', 'tz') : null;
-                    $data->map_2 = !empty($data->getProgress('map_2')) ? $data->getProgress('map_2') : null;
-                    $data->map_2_tz = !empty($data->getProgress('map_2', 'tz')) ? $data->getProgress('map_2', 'tz') : null;
-                    $data->map_3 = !empty($data->getProgress('map_3')) ? $data->getProgress('map_3') : null;
-                    $data->map_3_tz = !empty($data->getProgress('map_3', 'tz')) ? $data->getProgress('map_3', 'tz') : null;
-                    $data->map_4 = !empty($data->getProgress('map_4')) ? $data->getProgress('map_4') : null;
-                    $data->map_4_tz = !empty($data->getProgress('map_4', 'tz')) ? $data->getProgress('map_4', 'tz') : null;
-                    $data->map_5 = !empty($data->getProgress('map_5')) ? $data->getProgress('map_5') : null;
-                    $data->map_5_tz = !empty($data->getProgress('map_5', 'tz')) ? $data->getProgress('map_5', 'tz') : null;
-                    $data->map_6 = !empty($data->getProgress('map_6')) ? $data->getProgress('map_6') : null;
-                    $data->map_6_tz = !empty($data->getProgress('map_6', 'tz')) ? $data->getProgress('map_6', 'tz') : null;
-                    $data->map_7 = !empty($data->getProgress('map_7')) ? $data->getProgress('map_7') : null;
-                    $data->map_7_tz = !empty($data->getProgress('map_7', 'tz')) ? $data->getProgress('map_7', 'tz') : null;
+                    $maps = [1, 2, 3, 4, 5, 6, 7];
+                    foreach($maps as $map){
+                        $data['map_'.$map] = !empty($data->getProgress('map_'.$map)) ? $data->getProgress('map_'.$map) : null;
+                        $data['map_'.$map.'_tz'] = !empty($data->getProgress('map_'.$map, 'tz')) ? $data->getProgress('map_'.$map, 'tz') : null;
+                    }
                 } else {
-                    $data->day_1 = !empty($data->getProgress('day_1')) ? $data->getProgress('day_1') : null;
-                    $data->day_2 = !empty($data->getProgress('day_2')) ? $data->getProgress('day_2') : null;
-                    $data->day_3 = !empty($data->getProgress('day_3')) ? $data->getProgress('day_3') : null;
-                    $data->day_4 = !empty($data->getProgress('day_4')) ? $data->getProgress('day_4') : null;
-                    $data->day_5 = !empty($data->getProgress('day_5')) ? $data->getProgress('day_5') : null;
-                    $data->day_6 = !empty($data->getProgress('day_6')) ? $data->getProgress('day_6') : null;
+                    $days = [1, 2, 3, 4, 5, 6];
+                    foreach($days as $day){
+                        $data['day_'.$day] = !empty($data->getProgress('day_'.$day)) ? $data->getProgress('day_'.$day) : null;
+                    }
                 }
 
                 return $data;
