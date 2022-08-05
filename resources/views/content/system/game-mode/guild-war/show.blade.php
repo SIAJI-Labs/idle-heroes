@@ -207,7 +207,7 @@
                 placeholderValue: 'Search for Registered Guild Member',
                 shouldSort: false
             });
-            memberProgressChoice.passedElement.element.addEventListener('showDropdown', (e) => {
+            function memberProgressChoiceFetch(memberProgressChoice){
                 let placeholder = [
                     memberProgressChoice.setChoiceByValue('').getValue()
                 ];
@@ -215,8 +215,8 @@
                 memberProgressChoice.setChoices(placeholder);
                 memberProgressChoice.setChoices(() => {
                     // console.log(e);
-                    let url = new URL(`{{ route('s.json.game-mode.guild-war.participant.list') }}`);
-                    url.searchParams.append('guild_war_id', '{{ $data->uuid }}');
+                    let url = new URL(`{{ route('s.json.game-mode.star-expedition.participant.list') }}`);
+                    url.searchParams.append('star_expedition_id', '{{ $data->uuid }}');
                     return fetch(url)
                         .then(function(response) {
                             return response.json();
@@ -230,6 +230,10 @@
                             });
                         });
                 });
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                memberProgressChoiceFetch(memberProgressChoice);
             });
         }
     </script>
@@ -363,6 +367,7 @@
                 if(document.getElementById('input-add_and_create')){
                     document.getElementById('input-add_and_create').checked = false;
                 }
+                memberProgressChoiceFetch(memberProgressChoice);
                 resetAction();
                 fetchData(1);
             });
@@ -460,6 +465,7 @@
             if(pointMask){
                 pointMask.value = '';
             }
+            memberProgressChoiceFetch(memberProgressChoice);
         }
         if(document.getElementById('form-point')){
 

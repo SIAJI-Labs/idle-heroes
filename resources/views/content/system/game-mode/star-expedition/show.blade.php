@@ -243,7 +243,6 @@
                 shouldSort: false
             });
             function memberProgressChoiceFetch(memberProgressChoice){
-                
                 let placeholder = [
                     memberProgressChoice.setChoiceByValue('').getValue()
                 ];
@@ -626,7 +625,6 @@
             if(pointMask){
                 pointMask.value = '';
             }
-
             memberProgressChoiceFetch(memberProgressChoice);
         }
         if(document.getElementById('form-point')){
