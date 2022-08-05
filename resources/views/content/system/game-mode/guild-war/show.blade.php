@@ -250,7 +250,7 @@
                 let url = new URL(`{{ route('s.json.game-mode.guild-war.participant.list') }}`);
                 url.searchParams.append('guild_war_id', '{{ $data->uuid }}');
                 url.searchParams.append('page', page);
-                url.searchParams.append('limit', 5);
+                url.searchParams.append('limit', 30);
                 fetch(url)
                     .then((response) => {
                         if(page === parseInt(1)){
