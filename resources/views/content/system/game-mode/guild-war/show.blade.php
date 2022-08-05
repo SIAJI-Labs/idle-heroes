@@ -60,7 +60,7 @@
                     <div class="tw__grid tw__grid-flow-col tw__grid-cols-2 tw__gap-4 tw__items-center">
                         <h5 class="card-title">Point Form</h5>
                         <div class="tw__text-right">
-                            <a href="javascript:void(0)" class="btn btn-sm btn-secondary tw__inline-flex tw__items-center tw__gap-1" onclick="resetPointAction()">Reset Form</a>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-secondary tw__inline-flex tw__items-center tw__gap-1" onclick="resetPointAction(true)">Reset Form</a>
                         </div>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                         <input type="hidden" name="action" value="participation_point" readonly>
                         <input type="hidden" name="guild_war_id" value="{{ $data->uuid }}" readonly>
 
-                        <div class="col-12 col-lg-4">
+                        <div class="col-12 col-lg-4 tw__order-1">
                             <div class="form-group lg:tw__mb-0">
                                 <label>Member</label>
                                 <select class="form-control" id="input-point_member_id" name="point_member_id" placeholder="Search for Registered Guild Member">
@@ -79,8 +79,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-3">
-                            <div class="form-group lg:tw__mb-0">
+                        <div class="col-12 col-lg-4 tw__order-2">
+                            <div class="form-group tw__mb-2 lg:tw__mb-0">
                                 <label>Progress</label>
                                 <select class="form-control" id="input-progress" name="progress" placeholder="Search for Progress">
                                     <option value="">Search for Progress</option>
@@ -93,16 +93,24 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-7 col-lg-3">
+                        <div class="col-7 col-lg-2 tw__order-4 lg:tw__order-3">
                             <div class="form-group tw__mb-0">
                                 <label>Point</label>
                                 <input type="text" inputmode="numeric" class="form-control" name="point" id="input-point" placeholder="Point">
                             </div>
                         </div>
-                        <div class="col-5 col-md-2">
+                        <div class="col-5 col-md-2 tw__order-5 lg:tw__order-4">
                             <div class="form-group tw__mb-0">
                                 <label class=" tw__block tw__text-white">Submit</label>
                                 <button type="submit" class="btn btn-primary tw__flex tw__items-center tw__gap-1">Submit</button>
+                            </div>
+                        </div>
+                        <div class="col-12 tw__order-3 lg:tw__order-5">
+                            <div class="form-group lg:tw__mb-0 lg:tw__mt-4">
+                                <div class="form-check tw__text-sm" id="form-add_more">
+                                    <input class="form-check-input" type="checkbox" name="add_more" value="" id="input-add_more">
+                                    <label class="form-check-label" for="input-add_more">Keep selected progress</label>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -415,7 +423,7 @@
             });
         }
 
-        const resetPointAction = () => {
+        const resetPointAction = (force = null) => {
             let form = document.getElementById('form-point');
 
             // Reset Title
@@ -432,9 +440,21 @@
             if(memberProgressChoice){
                 memberProgressChoice.setChoiceByValue('');
             }
+            if(force){
+                // Reset add more
+                if(form.querySelector('input[name="add_more"]')){
+                    form.querySelector('input[name="add_more"]').checked = false;
+                }
+            }
             // Reset Selected Progress Key
-            if(pointProgressChoice){
-                pointProgressChoice.setChoiceByValue('');
+            if(form.querySelector('input[name="add_more"]')){
+                if(pointProgressChoice && !(form.querySelector('input[name="add_more"]').checked)){
+                    pointProgressChoice.setChoiceByValue('');
+                }
+            } else {
+                if(pointProgressChoice){
+                    pointProgressChoice.setChoiceByValue('');
+                }
             }
             // Reset Point
             if(pointMask){
