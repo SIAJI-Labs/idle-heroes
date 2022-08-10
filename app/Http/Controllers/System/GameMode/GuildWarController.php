@@ -10,6 +10,7 @@ class GuildWarController extends Controller
     protected $guildModel;
     protected $periodModel;
     protected $guildWarModel;
+    protected $guildWarParticipantModel;
     /**
      * Run this function on load
      */
@@ -18,6 +19,7 @@ class GuildWarController extends Controller
         $this->guildModel = new \App\Models\Guild();
         $this->periodModel = new \App\Models\Period();
         $this->guildWarModel = new \App\Models\GuildWar();
+        $this->guildWarParticipantModel = new \App\Models\GuildWarParticipation();
     }
 
     /**
@@ -218,5 +220,17 @@ class GuildWarController extends Controller
                 return $q->period->datetime;
             }),
         ]);
+    }
+
+    /**
+     * Datatable
+     */
+    public function datatableAll(Request $request)
+    {
+        $data = $this->guildWarModel->query();
+
+        return datatables()
+            ->of($data)
+            ->toJson();
     }
 }

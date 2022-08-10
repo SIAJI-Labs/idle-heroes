@@ -42,12 +42,22 @@
                         <select class="form-control" id="input-faction_id" name="faction_id" placeholder="Search for Faction">
                             <option value="">Search for Faction</option>
                         </select>
+
+                        <div class="form-check tw__text-sm" id="form-keep_faction">
+                            <input class="form-check-input" type="checkbox" name="keep_faction" value="" id="input-keep_faction">
+                            <label class="form-check-label" for="input-keep_faction">Keep selected faction</label>
+                        </div>
                     </div>
                     <div class="form-group mb-4">
                         <label for="input-class_id">Class</label>
                         <select class="form-control" id="input-class_id" name="class_id" placeholder="Search for Class">
                             <option value="">Search for Class</option>
                         </select>
+
+                        <div class="form-check tw__text-sm" id="form-keep_class">
+                            <input class="form-check-input" type="checkbox" name="keep_class" value="" id="input-keep_class">
+                            <label class="form-check-label" for="input-keep_class">Keep selected class</label>
+                        </div>
                     </div>
                     <div class="form-group last:tw__mb-0">
                         <label>Name</label>
@@ -61,7 +71,7 @@
                 </div>
                 <div class="card-footer tw__text-right">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-secondary btn-sm text-gray-600 ms-auto" onclick="resetAction()">Reset</button>
+                        <button type="button" class="btn btn-secondary btn-sm text-gray-600 ms-auto" onclick="resetAction(true)">Reset</button>
                         <button type="submit" class="btn btn-primary btn-sm tw__flex tw__items-center tw__gap-1">Submit</button>
                     </div>
                 </div>
@@ -332,8 +342,10 @@
                                 content.classList.add('tw__p-4', 'tw__my-4', 'first:tw__mt-0', 'last:tw__mb-0', 'tw__bg-gray-100', 'tw__rounded-lg', 'tw__w-full', 'tw__flex');
                                 content.innerHTML = `
                                     <div class=" tw__flex tw__gap-2 tw__flex-col">
-                                        ${val.avatar ? `<img src="{{ asset('') }}/${val.avatar}" alt="${val.name}" class="tw__h-5">` : ''}
-                                        <span class="tw__text-base tw__font-bold tw__flex tw__items-center tw__gap-1">${val.tenant && val.tenant.length > 0 ? '<i class="fa-solid fa-crown" alt="Homeowner"></i>' : ''}${val.name}</span>
+                                        <div class="tw__flex tw__items-center tw__gap-1">
+                                            ${val.avatar ? `<img src="{{ asset('') }}/${val.avatar}" alt="${val.name}" class="tw__h-5 tw__object-contain">` : ''}
+                                            <span class="tw__text-base tw__font-bold tw__flex tw__items-center tw__gap-1">${val.tenant && val.tenant.length > 0 ? '<i class="fa-solid fa-crown" alt="Homeowner"></i>' : ''}${val.name}</span>
+                                        </div>
                                         <small class="tw__flex tw__items-center tw__gap-1">${smallInformation.join('<span>/</span>')}</small>
                                     </div>
 
@@ -388,10 +400,27 @@
                     });
             }
         }
-        const resetAction = () => {
+        const resetAction = (force = false) => {
             let elId = 'form';
             if(document.getElementById(elId)){
                 let form = document.getElementById(elId);
+                let clearFaction = true;
+                let clearClass = true;
+                if(!(force)){
+                    if(document.getElementById('input-keep_faction') && document.getElementById('input-keep_faction').checked){
+                        clearFaction = false;
+                    }
+                    if(document.getElementById('input-keep_class') && document.getElementById('input-keep_class').checked){
+                        clearClass = false;
+                    }
+                } else {
+                    if(document.getElementById('input-keep_faction')){
+                        document.getElementById('input-keep_faction').checked = false;
+                    }
+                    if(document.getElementById('input-keep_class')){
+                        document.getElementById('input-keep_class').checked = false;
+                    }
+                }
 
                 if(form.querySelectorAll('.old-file')){
                     form.querySelectorAll('.old-file').forEach((el) => {
@@ -410,11 +439,11 @@
                     form.querySelector('input[name="_method"]').value = 'POST';
                 }
                 // Reset Faction
-                if(factionChoice){
+                if(factionChoice && clearFaction){
                     factionChoice.setChoiceByValue('');
                 }
                 // Reset Class
-                if(classChoice){
+                if(classChoice && clearClass){
                     classChoice.setChoiceByValue('');
                 }
                 // Reset Avatar

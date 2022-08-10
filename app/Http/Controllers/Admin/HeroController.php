@@ -306,6 +306,23 @@ class HeroController extends Controller
                         });
                     });
                 }
+            } else if($request->action === 'homeowner' && $request->has('hero_id') && $request->hero_id != ''){
+                if($request->has('slot') && $request->slot != ''){
+                    // Get Selected slot Tenant
+                    $data->whereHas('tenant', function($q) use ($request){
+                        return $q->where('slot', $request->slot
+                            )->whereHas('tenant', function($q) use ($request){
+                                return $q->where(\DB::raw('BINARY `uuid`'), $request->hero_id);
+                            });
+                    });
+                } else {
+                    // Get Available Tenant
+                    $data->whereDoesntHave('tenant', function($q) use ($request){
+                        return $q->whereHas('tenant', function($q) use ($request){
+                            return $q->where(\DB::raw('BINARY `uuid`'), $request->hero_id);
+                        });
+                    });
+                }
             }
         }
 

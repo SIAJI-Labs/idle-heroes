@@ -17,6 +17,28 @@ Route::group([
     'as' => 's.',
     'middleware' => ['auth']
 ], function(){
+    Route::group([
+        'prefix' => 'manual'
+    ], function(){
+        // Participation Check
+        Route::get('participation-check', function(){
+            $collection = collect([
+                ['name' => 'Desk', 'price' => 200],
+                ['name' => 'Chair', 'price' => 100],
+                ['name' => 'Bookcase', 'price' => 150],
+            ]);
+            $sorted = $collection->sortBy('price');
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Fetched',
+                'result' => [
+                    'raw' => $sorted,
+                    'sorted' => $sorted->values()->all()
+                ]
+            ]);
+        });
+    });
+
     // Dashboard
     Route::get('/', \App\Http\Controllers\System\DashboardController::class)->name('index');
 
@@ -114,6 +136,22 @@ Route::group([
 
             // Period
             Route::get('period', [\App\Http\Controllers\System\GameMode\PeriodController::class, 'jsonList'])->name('period.list');
+        });
+
+        // DataTable
+        Route::group([
+            'prefix' => 'datatable',
+            'as' => 'datatable.'
+        ], function(){
+            // Game Mode
+            Route::group([
+                'prefix' => 'game-mode',
+                'as' => 'game-mode.'
+            ], function(){
+                // Guild War
+                Route::get('guild-war/{id}/participation', [\App\Http\Controllers\System\GameMode\GuildWarParticipationController::class, 'datatableAll'])->name('guild-war.participation.all');
+                Route::get('guild-war', [\App\Http\Controllers\System\GameMode\GuildWarController::class, 'datatableAll'])->name('guild-war.all');
+            });
         });
     });
 });

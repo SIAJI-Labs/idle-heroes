@@ -79,9 +79,23 @@ class GuildWarParticipation extends Model
      */
     public function scopeGetProgress($query, $key = null)
     {
-        return $this->guildWarParticipationPoint->where('key', $key)
-            ->first() ? $this->guildWarParticipationPoint->where('key', $key)
-            ->first()->value : [];
+        $q = $this->guildWarParticipationPoint->where('key', $key)
+            ->first();
+
+        \Log::debug("Debug on Participation", [
+            'table' => $this->getTable(),
+            'participation' => $this,
+            'key' => $key,
+            'data' => $q
+        ]);
+
+        return $q ? $q->value : [];
+    }
+    public function scopeGetProgressSum($query)
+    {
+        $progress = ['day_1', 'day_2', 'day_3', 'day_4', 'day_5', 'day_6'];
+        return $this->guildWarParticipationPoint()->whereIn('key', $progress)
+            ->first() ? $this->guildWarParticipationPoint()->whereIn('key', $progress)->sum('value') : [];
     }
 
     /**

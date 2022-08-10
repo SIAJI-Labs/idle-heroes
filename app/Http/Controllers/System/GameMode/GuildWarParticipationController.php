@@ -193,18 +193,58 @@ class GuildWarParticipationController extends Controller
                 ->lastPage();
         }
 
+        $final = $data->get()->map(function($data){
+            $days = [1, 2, 3, 4, 5, 6];
+            foreach($days as $day){
+                $data['day_'.$day] = !empty($data->getProgress('day_'.$day)) ? $data->getProgress('day_'.$day) : null;
+            }
+            $data['sum'] = !empty($data->getProgressSum()) ? $data->getProgressSum() : null;
+
+            return $data;
+        });
+
+        if($request->has('sort_key') && $request->sort_key != ''){
+            if($request->has('sort') && $request->sort === 'desc'){
+                $final = $final->sortByDesc($request->sort_key)->values()->all();
+            } else {
+                $final = $final->sortBy($request->sort_key)->values()->all();
+            }
+        }
+
         return response()->json([
             'status' => 'success',
             'message' => 'Data Fetched',
             'last_page' => $last_page,
-            'data' => $data->get()->map(function($data){
-                $days = [1, 2, 3, 4, 5, 6];
-                foreach($days as $day){
-                    $data['day_'.$day] = !empty($data->getProgress('day_'.$day)) ? $data->getProgress('day_'.$day) : null;
-                }
-
-                return $data;
-            }),
+            'data' => $final,
         ]);
+    }
+
+    /**
+     * Datatable
+     */
+    public function datatableAll(Request $request, $id)
+    {
+        $data = $this->guildWarParticipationModel->query()
+            ->select($this->guildWarParticipationModel->getTable().'.*')
+            ->whereHas('guildWar', function($q) use ($id){
+                return $q->where(\DB::raw('BINARY `uuid`'), $id);
+            });
+
+        $datatable = datatables()
+            ->of($data->with('guildWar', 'guildWar.period', 'guildMember', 'guildMember.player'));
+
+        // Add Progress
+        $days = [1, 2, 3, 4, 5, 6];
+        foreach($days as $day){
+            $datatable->addColumn('day_'.$day, function($data) use ($day){
+                return !empty($data->getProgress('day_'.$day)) ? $data->getProgress('day_'.$day) : null;
+            });
+        }
+        // Add Sum Progress
+        $datatable->addColumn('sum', function($data){
+            return !empty($data->getProgressSum()) ? $data->getProgressSum() : null;
+        });
+
+        return $datatable->toJson();
     }
 }

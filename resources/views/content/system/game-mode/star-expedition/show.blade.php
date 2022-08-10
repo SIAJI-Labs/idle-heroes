@@ -127,7 +127,27 @@
                         </div>
                     </div>
                     
-                    <div id="star_expedition_participation-container"></div>
+                    {{-- <div id="star_expedition_participation-container"></div> --}}
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-bordered tw__mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Member</th>
+                                    <th class=" tw__text-center">Day 1</th>
+                                    <th class=" tw__text-center">Day 2</th>
+                                    <th class=" tw__text-center">Day 3</th>
+                                    <th class=" tw__text-center">Day 4</th>
+                                    <th class=" tw__text-center">Day 5</th>
+                                    <th class=" tw__text-center">Day 6</th>
+                                </tr>
+                            </thead>
+                            <tbody id="star_expedition-container">
+                                <tr>
+                                    <td class=" tw__text-center" colspan="7">No available data</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="se-map" role="tabpanel" aria-labelledby="se-map-tab">
                     <div class="table-responsive">
@@ -316,10 +336,25 @@
             });;
         }
 
+        const progressSet = (el) => {
+            console.log(el);
+            let parentRow = el.closest('tr');
+            if(parentRow && parentRow.dataset.uuid && memberProgressChoice){
+                memberProgressChoice.setChoiceByValue(parentRow.dataset.uuid);
+            }
+            if(el.dataset.progress && pointProgressChoice){
+                pointProgressChoice.setChoiceByValue(el.dataset.progress);
+            }
+            if(el.dataset.value && pointMask){
+                pointMask.value = (el.dataset.value).toString();
+                document.getElementById('input-point').focus();
+            }
+        }
+        
         const fetchData = (page = 1) => {
-            if(document.getElementById('star_expedition_participation-container')){
+            if(document.getElementById('star_expedition-container')){
                 let button = null;
-                let container = document.getElementById('star_expedition_participation-container');
+                let container = document.getElementById('star_expedition-container');
                 if(document.getElementById('pills-tab').querySelector('.nav-link.active').dataset.type === 'map'){
                     container = document.getElementById('star_expedition_map-container');
                 }
@@ -357,7 +392,7 @@
                         return response.json();
                     }).then((response) => {
                         let data = response.data;
-                        let content = document.createElement('div');
+                        let content = document.createElement('tr');
 
                         if(document.getElementById('pills-tab').querySelector('.nav-link.active').dataset.type === 'map'){
                             content = document.createElement('tr');
@@ -424,55 +459,34 @@
                         } else if(document.getElementById('pills-tab').querySelector('.nav-link.active').dataset.type === 'point'){
                             if(data.length > 0){
                                 data.forEach((val, index) => {
-                                    content.classList.add('tw__p-4', 'tw__my-4', 'first:tw__mt-0', 'last:tw__mb-0', 'tw__bg-gray-100', 'tw__rounded-lg', 'tw__w-full', 'tw__flex', 'tw__flex-col');
-                                    content.innerHTML = `
-                                        <div class=" tw__flex tw__items-center tw__gap-1">
-                                            <span class="tw__text-base tw__font-bold tw__flex tw__items-center tw__gap-1">${val.guild_member.player.name}</span>
-                                            ${val.guild_member.player.player_identifier ? `<span class="">(#${val.guild_member.player.player_identifier})</span>` : ''}
-                                        </div>
+                                    content.setAttribute('data-uuid', val.uuid);
 
-                                        <div class=" tw__mt-3 tw__grid tw__grid-cols-2 md:tw__grid-cols-3 lg:tw__grid-cols-6 tw__gap-1 md:tw__gap-2 lg:tw__gap-4">
-                                            <div class=" tw__flex tw__flex-col">
-                                                <span class="tw__font-bold">Day 1</span>
-                                                <span>${val.day_1 ? numberFormat(val.day_1, '') : '-'}</span>
-                                            </div>
-                                            <div class=" tw__flex tw__flex-col">
-                                                <span class="tw__font-bold">Day 2</span>
-                                                <span>${val.day_2 ? numberFormat(val.day_2, '') : '-'}</span>
-                                            </div>
-                                            <div class=" tw__flex tw__flex-col">
-                                                <span class="tw__font-bold">Day 3</span>
-                                                <span>${val.day_3 ? numberFormat(val.day_3, '') : '-'}</span>
-                                            </div>
-                                            <div class=" tw__flex tw__flex-col">
-                                                <span class="tw__font-bold">Day 4</span>
-                                                <span>${val.day_4 ? numberFormat(val.day_4, '') : '-'}</span>
-                                            </div>
-                                            <div class=" tw__flex tw__flex-col">
-                                                <span class="tw__font-bold">Day 5</span>
-                                                <span>${val.day_5 ? numberFormat(val.day_5, '') : '-'}</span>
-                                            </div>
-                                            <div class=" tw__flex tw__flex-col">
-                                                <span class="tw__font-bold">Day 6</span>
-                                                <span>${val.day_6 ? numberFormat(val.day_6, '') : '-'}</span>
-                                            </div>
-                                        </div>
+                                    let progressList = [];
+                                    let progressIndex = ['1', '2', '3', '4', '5', '6'];
+                                    progressIndex.forEach((ci, ciindex) => {
+                                        let progress = val[`day_${ci}`];
+                                        progressList.push(`
+                                            <td onclick="progressSet(this)" data-progress="day_${ci}" data-value="${progress}">
+                                                <span>${numberFormat(progress, null)}</span>
+                                            </td>
+                                        `);
+                                    });
+                                    content.innerHTML = `
+                                        <td>
+                                            <div class=" tw__flex tw__gap-1 tw__flex-col">
+                                                <span class="tw__text-base tw__font-bold tw__flex tw__items-center tw__gap-1">${val.guild_member.player.name}</span>
+                                                ${val.guild_member.player.player_identifier ? `<small class="">(#${val.guild_member.player.player_identifier})</small>` : ''}
+                                            </div>    
+                                        </td>
+                                        ${progressList.join('')}
                                     `;
                                     container.appendChild(content);
-                                    content = document.createElement('div');
+                                    content = document.createElement('tr');
                                 });
                             } else {
-                                content.classList.add('alert', 'alert-primary', 'tw__mb-0');
-                                content.setAttribute('role', 'alert');
-                                content.innerHTML = `
-                                    <div class=" tw__flex tw__items-center">
-                                        <i class="fa-solid fa-triangle-exclamation tw__mr-2"></i>
-                                        <div class="tw__block tw__font-bold tw__uppercase">
-                                            Attention!
-                                        </div>
-                                    </div>
-                                    <span class="tw__block tw__italic">No data found</span>
-                                `;
+                                content.setAttribute('colspan', '7');
+                                content.classList.add('tw__text-center');
+                                content.innerHTML = `No available data`;
 
                                 container.appendChild(content);
                             }

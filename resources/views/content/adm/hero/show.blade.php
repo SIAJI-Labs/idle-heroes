@@ -84,7 +84,7 @@
                                 Information!
                             </div>
                         </div>
-                        <span class="tw__block">Hero below are house tenant if <strong>{{ $data->name }}</strong> as homeowner.</span>
+                        <span class="tw__block">Hero below are house tenant for <strong>{{ $data->name }}</strong>, when <strong>{{ $data->name }}</strong> is homeowner.</span>
                     </div>
                     
                     <div class="row">
@@ -94,7 +94,7 @@
                                     <div class="card-header">
                                         <h5 class="card-title">Slot {{ $i }}</h5>
                                     </div>
-                                    <div class="card-body" id="slot_{{ $i }}-container">
+                                    <div class="card-body tw__max-h-[250px] tw__overflow-y-scroll" id="slot_{{ $i }}-container">
                                         <span>No available data</span>
                                     </div>
                                     <div class="card-footer">
@@ -120,7 +120,25 @@
                                 Information!
                             </div>
                         </div>
-                        <span class="tw__block">Hero below are homeowner where <strong>{{ $data->name }}</strong> as tenant.</span>
+                        <span class="tw__block">Hero below are homeowner where <strong>{{ $data->name }}</strong> is tenant.</span>
+                    </div>
+
+                    <div class="row">
+                        @for($i = 1; $i <= 4; $i++)
+                            <div class="col-12 col-md-6 col-lg-3">
+                                <div class="card lg:tw__mb-0">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Slot {{ $i }}</h5>
+                                    </div>
+                                    <div class="card-body tw__max-h-[250px] tw__overflow-y-scroll" id="slot_ho_{{ $i }}-container">
+                                        <span>No available data</span>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="button" class="btn btn-primary btn-sm page-control tw__flex tw__items-center tw__gap-1 btn-load_more" data-slot="slot_ho_{{ $i }}" data-page="1" onclick="fetchHomeownerData(1, 'slot_ho_{{ $i }}')"><i class="fa-solid fa-arrows-rotate"></i> Load More</button>
+                                    </div>
+                                </div>
+                            </div>
+                        @endfor
                     </div>
                 </div>
             </div>
@@ -292,17 +310,17 @@
                                     let smallInformation = [];
                                     if(val.hero_faction){
                                         smallInformation.push(`
-                                            <div class=" tw__flex tw__items-center tw__gap-2">
+                                            <div class=" tw__flex tw__items-center tw__gap-1">
                                                 ${val.hero_faction.icon ? `<img src="{{ asset('') }}/${val.hero_faction.icon}" alt="${val.hero_faction.name}" class="tw__h-3">` : ''}
-                                                <span>${val.hero_faction.name}</span>
+                                                <span class="tw__leading-none">${val.hero_faction.name}</span>
                                             </div>
                                         `);
                                     }
                                     if(val.hero_class){
                                         smallInformation.push(`
-                                            <div class=" tw__flex tw__items-center tw__gap-2">
-                                                ${val.hero_class.icon ? `<img src="{{ asset('') }}/${val.hero_class.icon}" alt="${val.hero_class.name}" class="tw__h-3">` : ''}
-                                                <span>${val.hero_class.name}</span>
+                                            <div class=" tw__flex tw__items-center tw__gap-1">
+                                                ${val.hero_class.icon ? `<img src="{{ asset('') }}/${val.hero_class.icon}" alt="${val.hero_class.name}" class="tw__h-3.5">` : ''}
+                                                <span class="tw__leading-none">${val.hero_class.name}</span>
                                             </div>
                                         `);
                                     }
@@ -310,8 +328,9 @@
                                     content.classList.add('tw__p-4', 'tw__my-4', 'first:tw__mt-0', 'last:tw__mb-0', 'tw__bg-gray-100', 'tw__rounded-lg', 'tw__w-full', 'tw__flex');
                                     content.innerHTML = `
                                         <div class=" tw__flex tw__gap-2 tw__flex-col">
-                                            ${val.avatar ? `<img src="{{ asset('') }}/${val.avatar}" alt="${val.name}" class="tw__h-5">` : ''}
-                                            <span class="tw__text-base tw__font-bold">${val.name}</span>
+                                            <div class="tw__flex tw__items-center tw__gap-1">
+                                                <span class="tw__text-base tw__font-bold tw__flex tw__items-center tw__gap-1">${val.tenant && val.tenant.length > 0 ? '<i class="fa-solid fa-crown" alt="Homeowner"></i>' : ''}${val.name}</span>
+                                            </div>
                                             <small class="tw__flex tw__items-center tw__gap-1 tw__flex-wrap">${smallInformation.join('')}</small>
                                         </div>
 
@@ -359,6 +378,117 @@
                 }
             }
         }
+        const fetchHomeownerData = (page = 1, slot = []) => {
+            if(Array.isArray(slot)){
+                slot.forEach((val) => {
+                    fetchHomeownerData(page, val);
+                });
+            } else {
+                // Fetch tenant
+                let container = document.getElementById(`${slot}-container`);
+                if(container){
+                    // console.log(`Fetch data for: ${slot}`);
+
+                    let button = null;
+                    if(document.querySelector(`.btn-load_more[data-slot="${slot}"]`)){
+                        button = document.querySelector(`.btn-load_more[data-slot="${slot}"]`);
+                        let currentPage = button.dataset.page;
+                        button.innerHTML = `<i class="fa-solid fa-spinner" data-animate="spin"></i> Loading`;
+                    }
+
+                    if(page === parseInt(1)){
+                        container.innerHTML = 'Loading...';
+                    }
+                    let url = new URL(`{{ route('adm.json.hero.list') }}`);
+                    url.searchParams.append('page', page);
+                    url.searchParams.append('limit', 5);
+                    url.searchParams.append('force_order_column', 'name');
+                    url.searchParams.append('force_order', 'asc');
+                    url.searchParams.append('action', 'homeowner');
+                    url.searchParams.append('hero_id', '{{ $data->uuid }}');
+                    url.searchParams.append('slot', slot.replace('slot_ho_', 'slot_'));
+
+                    fetch(url)
+                        .then((response) => {
+                            if(page === parseInt(1)){
+                                container.innerHTML = '';
+                            }
+                            if(button !== null){
+                                button.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Load More`;
+                            }
+                            return response.json();
+                        }).then((response) => {
+                            let data = response.data;
+                            let content = document.createElement('div');
+
+                            if(data.length > 0){
+                                data.forEach((val, index) => {
+                                    let smallInformation = [];
+                                    if(val.hero_faction){
+                                        smallInformation.push(`
+                                            <div class=" tw__flex tw__items-center tw__gap-1">
+                                                ${val.hero_faction.icon ? `<img src="{{ asset('') }}/${val.hero_faction.icon}" alt="${val.hero_faction.name}" class="tw__h-3">` : ''}
+                                                <span class="tw__leading-none">${val.hero_faction.name}</span>
+                                            </div>
+                                        `);
+                                    }
+                                    if(val.hero_class){
+                                        smallInformation.push(`
+                                            <div class=" tw__flex tw__items-center tw__gap-1">
+                                                ${val.hero_class.icon ? `<img src="{{ asset('') }}/${val.hero_class.icon}" alt="${val.hero_class.name}" class="tw__h-3.5">` : ''}
+                                                <span class="tw__leading-none">${val.hero_class.name}</span>
+                                            </div>
+                                        `);
+                                    }
+
+                                    content.classList.add('tw__p-4', 'tw__my-4', 'first:tw__mt-0', 'last:tw__mb-0', 'tw__bg-gray-100', 'tw__rounded-lg', 'tw__w-full', 'tw__flex');
+                                    content.innerHTML = `
+                                        <div class=" tw__flex tw__gap-2 tw__flex-col">
+                                            <div class="tw__flex tw__items-center tw__gap-1">
+                                                <span class="tw__text-base tw__font-bold tw__flex tw__items-center tw__gap-1">${val.tenant && val.tenant.length > 0 ? '<i class="fa-solid fa-crown" alt="Homeowner"></i>' : ''}${val.name}</span>
+                                            </div>
+                                            <small class="tw__flex tw__items-center tw__gap-1 tw__flex-wrap">${smallInformation.join('')}</small>
+                                        </div>
+
+                                        <div class="tw__ml-auto dropdown dropstart tw__leading-none tw__flex tw__items-baseline">
+                                            <button class="dropdown-toggle arrow-none" type="button" data-bs-auto-close="outside" id="dropdown-${index}" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdown-${index}">
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('adm.hero.index') }}/${val.uuid}">
+                                                        <span class=" tw__flex tw__items-center"><i class="fa-solid fa-eye"></i>Show</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    `;
+                                    container.appendChild(content);
+                                    content = document.createElement('div');
+                                });
+                            } else {
+                                content.innerHTML = `
+                                    <span class="tw__block tw__italic">No available data</span>
+                                `;
+
+                                container.appendChild(content);
+                            }
+
+                            // Update Pagination
+                            if(document.querySelector(`.btn-load_more[data-slot="${slot}"]`)){
+                                let nextPage = parseInt(page) + 1;
+                                if(page === response.last_page){
+                                    document.querySelector(`.btn-load_more[data-slot="${slot}"]`).setAttribute('disabled', true);
+                                } else {
+                                    document.querySelector(`.btn-load_more[data-slot="${slot}"]`).removeAttribute('disabled');
+                                    document.querySelector(`.btn-load_more[data-slot="${slot}"]`).setAttribute('onclick', `fetchHomeownerData(${nextPage}, '${slot}')`);
+                                    document.querySelector(`.btn-load_more[data-slot="${slot}"]`).dataset.page = nextPage;
+                                }
+                            }
+                        });
+                }
+            }
+        }
         const removeData = (uuid, slot) => {
             console.log(`Remove Data for Tenant ${uuid}`);
             Swal.fire({
@@ -392,6 +522,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             fetchData(1, ['slot_1', 'slot_2', 'slot_3', 'slot_4']);
+            fetchHomeownerData(1, ['slot_ho_1', 'slot_ho_2', 'slot_ho_3', 'slot_ho_4']);
         });
 
         if(document.getElementById('modal-tenant')){
