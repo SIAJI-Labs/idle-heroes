@@ -158,7 +158,7 @@ class HeroController extends Controller
         $data = $this->heroModel->where(\DB::raw('BINARY `uuid`'), $id)
             ->firstOrFail();
         \DB::transaction(function () use ($request, $data) {
-            $avatar = null;
+            $avatar = $data->avatar;
             if ($request->hasFile('avatar') && ! empty($request->avatar)) {
                 // Upload File
                 $uploaded = $this->requestUpload($request->avatar, $this->filePath, false, null);
