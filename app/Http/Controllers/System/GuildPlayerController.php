@@ -67,7 +67,8 @@ class GuildPlayerController extends Controller
         $data = $this->guildMemberModel;
         $data->guild_id = $guild->id;
         $data->player_id = $player->id;
-        $data->join = date("Y-m-d H:i:s");
+        $data->join = (new \DateTime('now', new \DateTimeZone('UTC')))->format('Y-m-d H:i:s'); //UTC
+        $data->timezone_offset = $request->_timezone ?? env('APP_TIMEZONE_OFFSET', null);
         $data->save();
 
         return response()->json([
@@ -125,7 +126,8 @@ class GuildPlayerController extends Controller
             ->whereNull('out')
             ->orderBy('join', 'desc')
             ->firstOrFail();
-        $data->out = date("Y-m-d H:i:s");
+        $data->out = (new \DateTime('now', new \DateTimeZone('UTC')))->format('Y-m-d H:i:s'); //UTC
+        $data->timezone_offset = $request->_timezone ?? env('APP_TIMEZONE_OFFSET', null);
         $data->save();
 
         return response()->json([

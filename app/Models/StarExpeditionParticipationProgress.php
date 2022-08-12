@@ -93,13 +93,21 @@ class StarExpeditionParticipationProgress extends Model
         static::saving(function ($model) {
             if(in_array($model->key, ['map_1', 'map_2', 'map_3', 'map_4', 'map_5', 'map_6', 'map_7'])){
                 // Validate if value is date
-
-                // Convert UTC to Server Timezone
-                if(date("Y-m-d H:i:s", strtotime($model->value)) !== date("Y-m-d H:i:s", strtotime('-'))){
-                    $model->value = date('Y-m-d H:i:s', strtotime(convertToUtc($model->value, env('APP_TIMEZONE_OFFSET'), false)));
-                }
                 if (empty($model->timezone_offset)) {
                     $model->timezone_offset = env('APP_TIMEZONE_OFFSET');
+                }
+                // Convert to UTC
+                if(date("Y-m-d H:i:s", strtotime($model->value)) !== date("Y-m-d H:i:s", strtotime('-'))){
+                    // Convert Datetime to UTC
+                    $raw = date('Y-m-d H:i:s', strtotime($model->value));
+                    $timezone = ($model->timezone_offset ?? env('APP_TIMEZONE_OFFSET', 0));
+                    // Convert to UTC
+                    $utc = convertToUtc($raw, $timezone);
+                    $datetime = date('Y-m-d H:i:00', strtotime($utc));
+                    $date = date('Y-m-d', strtotime($utc));
+                    $time = date('H:i:00', strtotime($utc));
+                    // Set Date
+                    $model->value = $datetime;
                 }
             }
         });

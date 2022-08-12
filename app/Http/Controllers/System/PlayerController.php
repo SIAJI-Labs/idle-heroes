@@ -9,6 +9,7 @@ class PlayerController extends Controller
 {
     protected $guildModel;
     protected $playerModel;
+    protected $guildMemberModel;
     protected $associationModel;
 
     /**
@@ -18,6 +19,7 @@ class PlayerController extends Controller
     {
         $this->guildModel = new \App\Models\Guild();
         $this->playerModel = new \App\Models\Player();
+        $this->guildMemberModel = new \App\Models\GuildMember();
         $this->associationModel = new \App\Models\Association();
     }
 
@@ -81,7 +83,7 @@ class PlayerController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $data = $this->playerModel->with('association')->where(\DB::raw('BINARY `uuid`'), $id)
+        $data = $this->playerModel->with('association', 'guildMember', 'guildMember.guild')->where(\DB::raw('BINARY `uuid`'), $id)
             ->whereHas('association', function($q){
                 return $q->where('user_id', \Auth::user()->id);
             })
@@ -96,6 +98,10 @@ class PlayerController extends Controller
                 ]
             ]);
         }
+
+        return view('content.system.player.show', [
+            'data' => $data
+        ]);
     }
 
     /**
@@ -202,6 +208,40 @@ class PlayerController extends Controller
             'message' => 'Data Fetched',
             'last_page' => $last_page,
             'data' => $data->orderBy('name', 'asc')->get(),
+        ]);
+    }
+    public function jsonGuildHistory(Request $request, $id)
+    {
+        $data_limit = $request->limit ?? 10;
+
+        $data = $this->guildMemberModel->query()
+            ->with('guild')
+            ->whereHas('player', function($q) use ($id){
+                return $q->where(\DB::raw('BINARY `uuid`'), $id);
+            });
+
+        $last_page = null;
+        if ($request->has('search') && $request->search != '') {
+            // Apply search param
+            $data = $data->whereHas('guild', function($q) use ($request){
+                return $q->where('name', 'like', '%'.$request->search.'%');
+            });
+        }
+
+        if ($request->has('page')) {
+            // If request has page parameter, add paginate to eloquent
+            $data->paginate($data_limit);
+            // Get last page
+            $last_page = $data
+                ->paginate($data_limit)
+                ->lastPage();
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data Fetched',
+            'last_page' => $last_page,
+            'data' => $data->orderBy('join', 'desc')->get(),
         ]);
     }
 }

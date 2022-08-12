@@ -86,21 +86,23 @@ class Period extends Model
 
         // Listen to Saving Event
         static::saving(function ($model) {
-            // \Log::debug("Debug on Saving function - before changing", [
-            //     'datetime' => $model->datetime,
-            //     'timezone' => env('APP_TIMEZONE_OFFSET')
-            // ]);
-            // Convert UTC to Server Timezone
-            $model->date = date('Y-m-d', strtotime(convertToUtc($model->datetime, env('APP_TIMEZONE_OFFSET'), false)));
-            $model->time = date('H:i:s', strtotime(convertToUtc($model->datetime, env('APP_TIMEZONE_OFFSET'), false)));
-            $model->datetime = date('Y-m-d H:i:s', strtotime(convertToUtc($model->datetime, env('APP_TIMEZONE_OFFSET'), false)));
-            // \Log::debug("Debug on Saving function - after changing", [
-            //     'datetime' => $model->datetime,
-            //     'timezone' => env('APP_TIMEZONE_OFFSET')
-            // ]);
             if (empty($model->timezone_offset)) {
                 $model->timezone_offset = env('APP_TIMEZONE_OFFSET');
             }
+
+            // Convert Datetime to UTC
+            $raw = date('Y-m-d H:i:s', strtotime($model->datetime));
+            $timezone = ($model->timezone_offset ?? env('APP_TIMEZONE_OFFSET', 0));
+            // Convert to UTC
+            $utc = convertToUtc($raw, $timezone);
+            $datetime = date('Y-m-d H:i:00', strtotime($utc));
+            $date = date('Y-m-d', strtotime($utc));
+            $time = date('H:i:00', strtotime($utc));
+
+            // Set Date
+            $model->datetime = $datetime;
+            $model->date = $date;
+            $model->time = $time;
         });
     }
 }

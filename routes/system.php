@@ -107,6 +107,13 @@ Route::group([
         });
         Route::get('guild', [\App\Http\Controllers\System\GuildController::class, 'jsonList'])->name('guild.list');
         // Player
+        Route::group([
+            'prefix' => 'player',
+            'as' => 'player.'
+        ], function(){
+            // Guild History
+            Route::get('{uuid}/guild-history', [\App\Http\Controllers\System\PlayerController::class, 'jsonGuildHistory'])->name('guild-history.list');
+        });
         Route::get('player', [\App\Http\Controllers\System\PlayerController::class, 'jsonList'])->name('player.list');
 
         // Game Mode

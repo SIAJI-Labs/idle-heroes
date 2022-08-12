@@ -159,11 +159,11 @@
             let el = document.querySelectorAll('span[data-finish]');
             if(el.length > 0){
                 el.forEach((el, index) => {
-                    let date = el.dataset.finish;
+                    let date = new Date(el.dataset.finish);
                     let length = el.dataset.length;
 
                     // Check if finish date is greater than today
-                    if(moment(date).add(length, 'days') > moment()){
+                    if(moment(date) > moment()){
                         timer[index] = setInterval(() => {
                             countDowntimer(el);
                         }, 1000);
@@ -176,18 +176,22 @@
         const countDowntimer = (el, index) => {
             let text = '-';
             let now = new Date();
+            let start = new Date(el.dataset.start);
             let finish = new Date(el.dataset.finish);
             let ends = addDays(finish, parseInt(el.dataset.length));
 
-            let diff = finish.getTime() - now.getTime();
-            if(now > finish && now < ends){
-                diff = ends.getTime() - now.getTime();
-            };
-            if(diff < 0){
-                // Time is up
-                clearInterval(timer[index]);
-            } else {
-                // Show timer
+            let preparationText = '-';
+            let endText = '-';
+            let timeType = ['preparation', 'ends'];
+            timeType.forEach((val) => {
+                let date = start;
+                if(val === 'preparation'){
+                    date = start;
+                } else if(val === 'ends'){
+                    date = finish;
+                }
+
+                let diff = date.getTime() - now.getTime();
                 let days = Math.floor(diff / (1000*60*60*24));
                 let hours = (days * 24) + Math.floor(diff % (1000*60*60*24) / (1000*60*60));
                 let parsedHours = String(hours).padStart(2, '0');
@@ -196,24 +200,28 @@
                 let seconds = Math.floor(diff % (1000*60) / 1000);
                 let parsedSeconds = String(seconds).padStart(2, '0');
 
-                // Calculate length
-                let length = el.dataset.length;
-                let ends = hours + (length * 24);
-                let parsedEnds = String(ends).padStart(2, '0');
-
-                // Prefix
-                let prefix = `${parsedHours}:${parsedMinutes}:${parsedSeconds}`;
-                let suffix = `${parsedEnds}:${parsedMinutes}:${parsedSeconds}`;
-                if(now > finish){
-                    prefix = '-';
-                    suffix = `${parsedHours}:${parsedMinutes}:${parsedSeconds}`;
+                let text = '-';
+                if(now < date){
+                    text = `${parsedHours}:${parsedMinutes}:${parsedSeconds}`;
                 }
-                text = `${prefix} / Season Ends in ${suffix}`;
+
+                if(val === 'preparation'){
+                    preparationText = text;
+                } else if(val === 'ends'){
+                    endText = text;
+                }
+            });
+
+            // Validate Time remaning
+            if(now >= finish){
+                // Time is up
+                clearInterval(timer[index]);
+            } else {
+                text = `${preparationText} / Season Ends in ${endText}`;
             }
 
             el.innerHTML = text;
         }
-
 
         const editData = (uuid) => {
             axios.get(`{{ route('s.game-mode.star-expedition.index') }}/${uuid}`)
@@ -351,6 +359,7 @@
                         let data = response.data;
                         let content = document.createElement('div');
 
+                        console.log(data);
                         if(data.length > 0){
                             data.forEach((val, index) => {
                                 let extra = '';
@@ -387,7 +396,7 @@
                                         <small class="text-muted tw__italic">Length: ${val.period.length} day${val.period.length > 1 ? 's' : ''}, ends in ${momentDateTime(moment(val.period.datetime).add(val.period.length, 'days'), 'DD MMM, YYYY / HH:mm', true)}</small>
                                     </div>
                                     
-                                    <small class="text-muted tw__italic tw__text-gray-300">Preparations end in <span data-finish="${val.period.datetime}" data-length="${val.period.length}">-</span></small>
+                                    <small class="text-muted tw__italic tw__text-gray-300">Preparations end in <span data-start="${momentDateTime(moment(val.period.datetime), null, null, false)}" data-finish="${momentDateTime(moment(val.period.datetime).add(val.period.length, 'days'), null, null, false)}" data-length="${val.length}">-</span></small>
                                 `;
                                 container.appendChild(content);
                                 content = document.createElement('div');

@@ -42,6 +42,8 @@
     @include('layouts.plugins.datatable.css')
     {{-- Choices --}}
     @include('layouts.plugins.choices.css')
+    {{-- Sweetalert --}}
+    @include('layouts.plugins.sweetalert2.css')
 @endsection
 
 @section('content')
@@ -55,6 +57,25 @@
             </div>
         </div>
         <div class="card-body">
+            <table class="table table-hover">
+                <tr>
+                    <th>Guild</th>
+                    <td>{{ $data->guild->name }}</td>
+                </tr>
+                <tr>
+                    <th>Period</th>
+                    <td>
+                        <span id="game_mode-period" data-start="{{ $data->period->datetime }}" data-end="{{ date("Y-m-d H:i:s", strtotime($data->period->datetime.'+'.$data->period->length.' days')) }}" data-length="{{ $data->period->length }}">{{ date('d F, Y / H:i:s', strtotime($data->period->datetime)) }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>State</th>
+                    <td>
+                        <span id="game_mode-state">-</span>
+                    </td>
+                </tr>
+            </table>
+
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                 <li class="nav-item tw__flex-1 tw__text-center">
                     <a class="nav-link active" id="se-point-tab" data-bs-toggle="pill" href="#se-point" role="tab" aria-controls="se-point" aria-selected="true" data-type="point">Point</a>
@@ -190,9 +211,104 @@
     @include('layouts.plugins.choices.js')
     {{-- iMask --}}
     @include('layouts.plugins.iMask.js')
+    {{-- Sweetalert --}}
+    @include('layouts.plugins.sweetalert2.js')
 @endsection
 
 @section('js_inline')
+    <script>
+        var timer;
+        document.addEventListener('DOMContentLoaded', () => {
+            if(document.getElementById('game_mode-period')){
+                let element = document.getElementById('game_mode-period');
+                let start = momentDateTime(moment(element.dataset.start), null, null, false);
+                let ends = momentDateTime(moment(element.dataset.end), null, null, false);
+                let length = element.dataset.length;
+
+                element.innerHTML = `
+                    <span class="tw__block">${momentDateTime(element.dataset.start, 'DD MMM, YYYY / HH:mm', true)}</span>
+                    <small class="text-muted tw__italic">Length: ${length} day${length > 1 ? 's' : ''}, ends in ${momentDateTime(moment(element.dataset.start).add(length, 'days'), 'DD MMM, YYYY / HH:mm', true)}</small>
+                `;
+                element.dataset.start = start;
+                element.dataset.end = ends;
+            }
+            setTimeout(() => {
+                if(document.getElementById('game_mode-state')){
+                    let element = document.getElementById('game_mode-state');
+                    if(document.getElementById('game_mode-period')){
+                        let periodEl = document.getElementById('game_mode-period');
+                        let date = new Date(periodEl.dataset.end);
+                        let length = periodEl.dataset.length;
+
+                        if(moment(date) > moment()){
+                            timer = setInterval(() => {
+                                countDowntimer(periodEl);
+                            }, 1000);
+                        } else {
+                            element.innerHTML = `Event completed!`;
+                        }
+                    } else {
+                        element.innerHTML = '-';
+                    }
+
+                    const addDays = (date, days) => {
+                        let res = new Date(date);
+                        res.setDate(res.getDate() + days);
+                        return res;
+                    }
+                    const countDowntimer = (el, index) => {
+                        let text = '-';
+                        let now = new Date();
+                        let start = new Date(el.dataset.start);
+                        let finish = new Date(el.dataset.end);
+                        let ends = addDays(finish, parseInt(el.dataset.length));
+
+                        let preparationText = '-';
+                        let endText = '-';
+                        let timeType = ['preparation', 'ends'];
+                        timeType.forEach((val) => {
+                            let date = start;
+                            if(val === 'preparation'){
+                                date = start;
+                            } else if(val === 'ends'){
+                                date = finish;
+                            }
+
+                            let diff = date.getTime() - now.getTime();
+                            let days = Math.floor(diff / (1000*60*60*24));
+                            let hours = (days * 24) + Math.floor(diff % (1000*60*60*24) / (1000*60*60));
+                            let parsedHours = String(hours).padStart(2, '0');
+                            let minutes = Math.floor(diff % (1000*60*60)/ (1000*60));
+                            let parsedMinutes = String(minutes).padStart(2, '0');
+                            let seconds = Math.floor(diff % (1000*60) / 1000);
+                            let parsedSeconds = String(seconds).padStart(2, '0');
+
+                            let text = '-';
+                            if(now < date){
+                                text = `${parsedHours}:${parsedMinutes}:${parsedSeconds}`;
+                            }
+
+                            if(val === 'preparation'){
+                                preparationText = text;
+                            } else if(val === 'ends'){
+                                endText = text;
+                            }
+                        });
+
+                        // Validate Time remaning
+                        if(now >= finish){
+                            // Time is up
+                            clearInterval(timer[index]);
+                        } else {
+                            text = `Preparation ends in ${preparationText} / Season Ends in ${endText}`;
+                        }
+
+                        document.getElementById('game_mode-state').innerHTML = text;
+                    }
+                }
+            }, 100);
+        });
+    </script>
     <script>
         // IMask
         var pointMask = null;
@@ -367,7 +483,11 @@
                             </tr>
                         `;
                     } else if(document.getElementById('pills-tab').querySelector('.nav-link.active').dataset.type === 'point'){
-                        container.innerHTML = 'Loading...';
+                        container.innerHTML = `
+                            <tr>
+                                <td class=" tw__text-center" colspan="7">Loading...</td>
+                            </tr>
+                        `;
                     }
                 }
                 if(document.getElementById('btn-load_more')){
@@ -430,7 +550,10 @@
                                     content.innerHTML = `
                                         <td>
                                             <div class=" tw__flex tw__gap-1 tw__flex-col">
-                                                <span class="tw__text-base tw__font-bold tw__flex tw__items-center tw__gap-1">${val.guild_member.player.name}</span>
+                                                <div class="tw__flex tw__items-center tw__gap-1">
+                                                    <button type="button" class="tw__px-2 tw__py-1 tw__leading-none tw__rounded tw__bg-red-400 hover:tw__bg-red-600" onclick="removeParticipant('${val.uuid}')"><i class="fa-solid fa-xmark"></i></button>
+                                                    <span class="tw__text-base tw__font-bold tw__flex tw__items-center tw__gap-1">${val.guild_member.player.name}</span>
+                                                </div>
                                                 ${val.guild_member.player.player_identifier ? `<small class="">(#${val.guild_member.player.player_identifier})</small>` : ''}
                                             </div>    
                                         </td>
@@ -474,7 +597,10 @@
                                     content.innerHTML = `
                                         <td>
                                             <div class=" tw__flex tw__gap-1 tw__flex-col">
-                                                <span class="tw__text-base tw__font-bold tw__flex tw__items-center tw__gap-1">${val.guild_member.player.name}</span>
+                                                <div class="tw__flex tw__items-center tw__gap-1">
+                                                    <button type="button" class="tw__px-2 tw__py-1 tw__leading-none tw__rounded tw__bg-red-400 hover:tw__bg-red-600" onclick="removeParticipant('${val.uuid}')"><i class="fa-solid fa-xmark"></i></button>
+                                                    <span class="tw__text-base tw__font-bold tw__flex tw__items-center tw__gap-1">${val.guild_member.player.name}</span>
+                                                </div>
                                                 ${val.guild_member.player.player_identifier ? `<small class="">(#${val.guild_member.player.player_identifier})</small>` : ''}
                                             </div>    
                                         </td>
@@ -484,9 +610,9 @@
                                     content = document.createElement('tr');
                                 });
                             } else {
-                                content.setAttribute('colspan', '7');
-                                content.classList.add('tw__text-center');
-                                content.innerHTML = `No available data`;
+                                content.innerHTML = `
+                                    <td colspan="7" class="tw__text-center">No available data</td>
+                                `;
 
                                 container.appendChild(content);
                             }
@@ -599,6 +725,39 @@
                         submitBtn.innerHTML = `Submit`;
                         submitBtn.disabled = false;
                     });
+            });
+        }
+        function removeParticipant(uuid){
+            // Remove Participant
+            Swal.fire({
+                title: 'Are you sure removing this participant?',
+                text: 'Removing participant will also delete this participant point (if exists)',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Remove',
+                showLoaderOnConfirm: true,
+                reverseButtons: true,
+                preConfirm: (login) => {
+                    return axios.post(`{{ route('s.game-mode.star-expedition.participation.store') }}/${uuid}`, {'_token': "{{ csrf_token() }}", '_method': 'DELETE'})
+                    .then(function (response) {
+                        console.log(response);
+
+                        return response.data;
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                console.log(result);
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: `Action Success`,
+                        icon: 'success',
+                        text: 'Participant removed'
+                    }).then((e) => {
+                        fetchData();
+                        memberProgressChoiceFetch(memberProgressChoice);
+                    });
+                }
             });
         }
 

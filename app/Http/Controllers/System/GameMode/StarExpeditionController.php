@@ -10,6 +10,7 @@ class StarExpeditionController extends Controller
     protected $guildModel;
     protected $periodModel;
     protected $starExpeditionModel;
+
     /**
      * Run this function on load
      */
@@ -180,7 +181,7 @@ class StarExpeditionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // 
     }
 
     /**

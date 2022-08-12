@@ -51,19 +51,10 @@ class PeriodController extends Controller
         ]);
 
         \DB::transaction(function () use($request) {
-            // Calculate Datetime
-            $raw = date('Y-m-d H:i:s', strtotime($request->period));
-            $timezone = ($request->_timezone ?? env('APP_TIMEZONE_OFFSET', 0));
-            // Convert to UTC
-            $utc = convertToUtc($raw, $timezone);
-            $datetime = date('Y-m-d H:i:00', strtotime($utc));
-            $date = date('Y-m-d', strtotime($utc));
-            $time = date('H:i:00', strtotime($utc));
-
             $data = $this->periodModel;
-            $data->date = date("Y-m-d", strtotime($datetime));
-            $data->time = date("H:i:s", strtotime($datetime));
-            $data->datetime = date("Y-m-d H:i:s", strtotime($datetime));
+            $data->date = date("Y-m-d", strtotime($request->period));
+            $data->time = date("H:i:s", strtotime($request->period));
+            $data->datetime = date("Y-m-d H:i:s", strtotime($request->period));
             $data->length = $request->length;
             $data->timezone_offset = $request->_timezone ?? env('APP_TIMEZONE_OFFSET', null);
             $data->save();
@@ -121,20 +112,11 @@ class PeriodController extends Controller
         ]);
 
         \DB::transaction(function () use($request, $id) {
-            // Calculate Datetime
-            $raw = date('Y-m-d H:i:s', strtotime($request->period));
-            $timezone = ($request->_timezone ?? env('APP_TIMEZONE_OFFSET', 0));
-            // Convert to UTC
-            $utc = convertToUtc($raw, $timezone);
-            $datetime = date('Y-m-d H:i:00', strtotime($utc));
-            $date = date('Y-m-d', strtotime($utc));
-            $time = date('H:i:00', strtotime($utc));
-
             $data = $this->periodModel->where(\DB::raw('BINARY `uuid`'), $id)
                 ->firstOrFail();
-            $data->date = date("Y-m-d", strtotime($datetime));
-            $data->time = date("H:i:s", strtotime($datetime));
-            $data->datetime = date("Y-m-d H:i:s", strtotime($datetime));
+            $data->date = date("Y-m-d", strtotime($request->period));
+            $data->time = date("H:i:s", strtotime($request->period));
+            $data->datetime = date("Y-m-d H:i:s", strtotime($request->period));
             $data->length = $request->length;
             $data->timezone_offset = $request->_timezone ?? env('APP_TIMEZONE_OFFSET', null);
             $data->save();

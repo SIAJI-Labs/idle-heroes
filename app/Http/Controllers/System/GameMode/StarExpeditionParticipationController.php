@@ -144,16 +144,7 @@ class StarExpeditionParticipationController extends Controller
             // Validate Date
             $inputDate = date("Y-m-d H:i:s", strtotime($request->date));
             if($inputDate !== date("Y-m-d H:i:s", strtotime('-'))){
-                // Convert to UTC
-                $raw = date('Y-m-d H:i:s', strtotime($inputDate));
-                $timezone = ($request->_timezone ?? env('APP_TIMEZONE_OFFSET', 0));
-                // Convert to UTC
-                $utc = convertToUtc($raw, $timezone);
-                $datetime = date('Y-m-d H:i:00', strtotime($utc));
-                $date = date('Y-m-d', strtotime($utc));
-                $time = date('H:i:00', strtotime($utc));
-
-                $inputDate = $datetime;
+                $inputDate = date('Y-m-d H:i:s', strtotime($inputDate));
             }
 
             return $this->starExpeditionParticipationProgressModel->updateOrCreate([
@@ -161,7 +152,7 @@ class StarExpeditionParticipationController extends Controller
                 'key' => $request->progress
             ], [
                 'value' => $inputDate,
-                'timezone_offset' => $request->_timezone
+                'timezone_offset' => $request->_timezone ?? env('APP_TIMEZONE_OFFSET', null);
             ]);
         });
 
@@ -217,7 +208,18 @@ class StarExpeditionParticipationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = $this->starExpeditionParticipationModel->where(\DB::raw('BINARY `uuid`'), $id)
+            ->firstOrFail();
+
+        if($data->starExpeditionParticipationProgress()->exists()){
+            $data->starExpeditionParticipationProgress()->delete();
+        }
+
+        $data->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'Data deleted'
+        ]);
     }
 
     /**

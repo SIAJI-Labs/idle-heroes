@@ -164,7 +164,18 @@ class GuildWarParticipationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = $this->guildWarParticipationModel->where(\DB::raw('BINARY `uuid`'), $id)
+            ->firstOrFail();
+
+        if($data->guildWarParticipationPoint()->exists()){
+            $data->guildWarParticipationPoint()->delete();
+        }
+
+        $data->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'Data deleted'
+        ]);
     }
 
     /**
