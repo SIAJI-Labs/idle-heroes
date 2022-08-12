@@ -4,7 +4,7 @@
     "/assets/plugins/flatpickr/flatpickr.js": "/assets/plugins/flatpickr/flatpickr.js?id=e938a7aa59771731feb7f1e9110c7b89",
     "/assets/plugins/jquery/jquery.js": "/assets/plugins/jquery/jquery.js?id=e36f96bcfc62d746cb11ee3d71bfd0ea",
     "/assets/plugins/iMask/iMask.js": "/assets/plugins/iMask/iMask.js?id=5675f244ec36d272a8b31d9166797928",
-    "/assets/css/tailwind.css": "/assets/css/tailwind.css?id=dd88fddd9377524b4fc4a5c3491c4d5f",
+    "/assets/css/tailwind.css": "/assets/css/tailwind.css?id=329f348fbeba477510ec85892eb7ca1e",
     "/assets/css/dashboard-kit/siaji.css": "/assets/css/dashboard-kit/siaji.css?id=21850a9a67f890c10a91df15805d0392",
     "/assets/plugins/bootstrap/bootstrap.css": "/assets/plugins/bootstrap/bootstrap.css?id=1aecbaa3ddc184a0443c87f2383fd1cc",
     "/assets/plugins/axios/axios.js": "/assets/plugins/axios/axios.js?id=75b931d1d8c1b24fb6bf9b32c80bf1bb",
@@ -2208,5 +2208,5 @@
     "/assets/js/dashboard-kit/plugins/feather.min.js": "/assets/js/dashboard-kit/plugins/feather.min.js?id=199d840e1af3952233f1756b75a9b1dd",
     "/assets/js/dashboard-kit/plugins/gmaps.min.js": "/assets/js/dashboard-kit/plugins/gmaps.min.js?id=b8b608f1809a432a6531021265dbe5d7",
     "/assets/js/dashboard-kit/plugins/perfect-scrollbar.min.js": "/assets/js/dashboard-kit/plugins/perfect-scrollbar.min.js?id=4707a5fde2e52a52c114cdad148fcb39",
-    "/assets/js/dashboard-kit/function.js": "/assets/js/dashboard-kit/function.js?id=8239e4eb3f0d6cf18b3b1f76682bb50c"
+    "/assets/js/dashboard-kit/function.js": "/assets/js/dashboard-kit/function.js?id=a845f3e0644955e0d8e53631f97f0303"
 }

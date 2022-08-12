@@ -65,11 +65,11 @@ const applyTimezoneField = (apply = null) => {
  * @param {*} timezone 
  * @returns 
  */
- function momentDateTime(date, format, timezone = null, offsetFormat = true){
-    let defaultTimezone = new Date(`${date} ${APP_TIMEZONE}`);
+ function momentDateTime(date, format = null, timezone = null, offsetFormat = true){
+    let defaultTimezone = new Date(`${date} GMT+0000`);
     if(navigator.userAgent.indexOf("Safari") != -1) {
         // Fix date format on safari browser
-        defaultTimezone = new Date(`${moment(date).format('ddd, DD MMM YYYY HH:mm:ss')} ${APP_TIMEZONE}`);
+        defaultTimezone = new Date(`${moment(date).format('ddd, DD MMM YYYY HH:mm:ss')} GMT+0000`);
     }
     const tzOffset = defaultTimezone.getTimezoneOffset();
 
@@ -85,6 +85,10 @@ const applyTimezoneField = (apply = null) => {
             // Apply symbol to existing string format
             format += ` (UTC${offsetSymbol}${offsetNum})`;
         }
+    }
+
+    if(format === null){
+        return moment(convertDateTime(defaultTimezone));
     }
 
     return moment(convertDateTime(defaultTimezone)).format(format);

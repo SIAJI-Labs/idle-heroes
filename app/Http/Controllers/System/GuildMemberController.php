@@ -103,8 +103,8 @@ class GuildMemberController extends Controller
         $data_limit = $request->limit ?? 10;
 
         $data = $this->guildMemberModel->query()->with(['player' => function($q){
-            return $q->orderBy('name', 'asc');
-        }])
+                return $q->orderBy('name', 'asc');
+            }])
             ->whereNull('out');
         $last_page = null;
         if ($request->has('search') && $request->search != '') {

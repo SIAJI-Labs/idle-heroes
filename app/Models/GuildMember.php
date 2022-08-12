@@ -19,7 +19,8 @@ class GuildMember extends Model
         'guild_id',
         'player_id',
         'join',
-        'out'
+        'out',
+        'timezone_offset'
     ];
 
     /**
@@ -91,6 +92,13 @@ class GuildMember extends Model
         static::creating(function ($model) {
             // Always generate UUID on Data Create
             $model->{'uuid'} = (string) Str::uuid();
+        });
+
+        // Listen to Saving Event
+        static::saving(function ($model) {
+            if (empty($model->timezone_offset)) {
+                $model->timezone_offset = env('APP_TIMEZONE_OFFSET');
+            }
         });
     }
 }
