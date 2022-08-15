@@ -339,6 +339,55 @@ html, body {
         }
     }
 
+    // Table
+    table {
+        thead {
+            tr {
+                &:first-child {
+                    th {
+                        &.sort {
+                            position: relative;
+
+                            &::after, &::before {
+                                position: absolute;
+                                right: 1rem;
+                                content: "";
+                                height: 0;
+                                width: 0;
+                                border-style: solid;
+                                border-color: transparent;
+                                border-width: 5px;
+                                opacity: 0.25;
+                            }
+                            &.sort_asc {
+                                &::before {
+                                    opacity: 1 !important;
+                                }
+                            }
+                            &::before {
+                                // Ascending
+                                border-bottom-color: #293240;
+                                top: 50%;
+                                margin-top: -.75rem;
+                            }
+                            &.sort_desc {
+                                &::after {
+                                    opacity: 1 !important;
+                                }
+                            }
+                            &::after {
+                                // Descending
+                                border-top-color: #293240;
+                                bottom: 50%;
+                                margin-bottom: -.75rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // Choices
     .choices {
         &[data-type*='select-one']{

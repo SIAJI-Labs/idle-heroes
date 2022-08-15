@@ -152,7 +152,7 @@ class StarExpeditionParticipationController extends Controller
                 'key' => $request->progress
             ], [
                 'value' => $inputDate,
-                'timezone_offset' => $request->_timezone ?? env('APP_TIMEZONE_OFFSET', null);
+                'timezone_offset' => $request->_timezone ?? env('APP_TIMEZONE_OFFSET', null)
             ]);
         });
 
@@ -248,26 +248,36 @@ class StarExpeditionParticipationController extends Controller
                 ->lastPage();
         }
 
+        $final = $data->get()->map(function($data) use ($request){
+            if($request->has('progress_type') && $request->progress_type === 'map'){
+                $maps = [1, 2, 3, 4, 5, 6, 7];
+                foreach($maps as $map){
+                    $data['map_'.$map] = !empty($data->getProgress('map_'.$map)) ? $data->getProgress('map_'.$map) : null;
+                    $data['map_'.$map.'_tz'] = !empty($data->getProgress('map_'.$map, 'tz')) ? $data->getProgress('map_'.$map, 'tz') : null;
+                }
+            } else {
+                $days = [1, 2, 3, 4, 5, 6];
+                foreach($days as $day){
+                    $data['day_'.$day] = !empty($data->getProgress('day_'.$day)) ? $data->getProgress('day_'.$day) : null;
+                }
+            }
+
+            return $data;
+        });
+
+        if($request->has('sort_key') && $request->sort_key != ''){
+            if($request->has('sort') && $request->sort === 'desc'){
+                $final = $final->sortByDesc($request->sort_key)->values()->all();
+            } else {
+                $final = $final->sortBy($request->sort_key)->values()->all();
+            }
+        }
+        
         return response()->json([
             'status' => 'success',
             'message' => 'Data Fetched',
             'last_page' => $last_page,
-            'data' => $data->get()->map(function($data) use ($request){
-                if($request->has('progress_type') && $request->progress_type === 'map'){
-                    $maps = [1, 2, 3, 4, 5, 6, 7];
-                    foreach($maps as $map){
-                        $data['map_'.$map] = !empty($data->getProgress('map_'.$map)) ? $data->getProgress('map_'.$map) : null;
-                        $data['map_'.$map.'_tz'] = !empty($data->getProgress('map_'.$map, 'tz')) ? $data->getProgress('map_'.$map, 'tz') : null;
-                    }
-                } else {
-                    $days = [1, 2, 3, 4, 5, 6];
-                    foreach($days as $day){
-                        $data['day_'.$day] = !empty($data->getProgress('day_'.$day)) ? $data->getProgress('day_'.$day) : null;
-                    }
-                }
-
-                return $data;
-            }),
+            'data' => $final,
         ]);
     }
 }
