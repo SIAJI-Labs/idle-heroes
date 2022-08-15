@@ -152,14 +152,14 @@
                     <div class="table-responsive">
                         <table class="table table-hover table-striped table-bordered tw__mb-0">
                             <thead>
-                                <tr>
-                                    <th>Member</th>
-                                    <th class=" tw__text-center">Day 1</th>
-                                    <th class=" tw__text-center">Day 2</th>
-                                    <th class=" tw__text-center">Day 3</th>
-                                    <th class=" tw__text-center">Day 4</th>
-                                    <th class=" tw__text-center">Day 5</th>
-                                    <th class=" tw__text-center">Day 6</th>
+                                <tr id="table-header">
+                                    <th data-key="guildMember.player.name" class=" tw__cursor-pointer">Member</th>
+                                    <th data-key="day_1" class=" tw__text-center tw__cursor-pointer">Day 1</th>
+                                    <th data-key="day_2" class=" tw__text-center tw__cursor-pointer">Day 2</th>
+                                    <th data-key="day_3" class=" tw__text-center tw__cursor-pointer">Day 3</th>
+                                    <th data-key="day_4" class=" tw__text-center tw__cursor-pointer">Day 4</th>
+                                    <th data-key="day_5" class=" tw__text-center tw__cursor-pointer">Day 5</th>
+                                    <th data-key="day_6" class=" tw__text-center tw__cursor-pointer">Day 6</th>
                                 </tr>
                             </thead>
                             <tbody id="star_expedition-container">
@@ -174,15 +174,15 @@
                     <div class="table-responsive">
                         <table class="table table-hover table-striped table-bordered tw__mb-0">
                             <thead>
-                                <tr>
-                                    <th>Member</th>
-                                    <th class=" tw__text-center">Map 1</th>
-                                    <th class=" tw__text-center">Map 2</th>
-                                    <th class=" tw__text-center">Map 3</th>
-                                    <th class=" tw__text-center">Map 4</th>
-                                    <th class=" tw__text-center">Map 5</th>
-                                    <th class=" tw__text-center">Map 6</th>
-                                    <th class=" tw__text-center">Map 7</th>
+                                <tr id="table_map-header">
+                                    <th data-key="guildMember.player.name" class=" tw__cursor-pointer">Member</th>
+                                    <th data-key="map_1" class=" tw__text-center tw__cursor-pointer">Map 1</th>
+                                    <th data-key="map_2" class=" tw__text-center tw__cursor-pointer">Map 2</th>
+                                    <th data-key="map_3" class=" tw__text-center tw__cursor-pointer">Map 3</th>
+                                    <th data-key="map_4" class=" tw__text-center tw__cursor-pointer">Map 4</th>
+                                    <th data-key="map_5" class=" tw__text-center tw__cursor-pointer">Map 5</th>
+                                    <th data-key="map_6" class=" tw__text-center tw__cursor-pointer">Map 6</th>
+                                    <th data-key="map_7" class=" tw__text-center tw__cursor-pointer">Map 7</th>
                                 </tr>
                             </thead>
                             <tbody id="star_expedition_map-container">
@@ -467,6 +467,77 @@
             }
         }
         
+        const fetchOrder = () => {
+            let tableHeader = document.getElementById('table-header');
+            if(document.getElementById('pills-tab').querySelector('.nav-link.active').dataset.type === 'map'){
+                tableHeader = document.getElementById('table_map-header');
+            }
+
+            if(tableHeader){
+                let firstChild = tableHeader.firstElementChild;
+                let key = firstChild.dataset.key;
+                let sort = 'asc';
+                let el = firstChild;
+                if(localStorage.getItem(`${tableHeader.getAttribute('id')}-tableStarExpeditionParticipation-{{ $data->uuid }}`)){
+                    let selectedSort = JSON.parse(localStorage.getItem(`${tableHeader.getAttribute('id')}-tableStarExpeditionParticipation-{{ $data->uuid }}`));
+                    if(tableHeader.querySelector(`th[data-key="${selectedSort.key}"]`)){
+                        el = tableHeader.querySelector(`th[data-key="${selectedSort.key}"]`);
+                        sort = selectedSort.sort;
+                    }
+                } else {
+                    // Add to Storage
+                    localStorage.setItem( `${tableHeader.getAttribute('id')}-tableStarExpeditionParticipation-{{ $data->uuid }}`, JSON.stringify({
+                        'key': key,
+                        'sort': sort,
+                    }));
+                }
+
+                el.classList.add('sort', `sort_${sort}`);
+
+                // Add Event Listener
+                if((tableHeader.querySelectorAll('th')).length > 0){
+                    tableHeader.querySelectorAll('th').forEach((el) => {
+                        el.addEventListener('click', (thEl) => {
+                            let target = thEl.target;
+                            console.log(target);
+                            // Check if current target has sort class
+                            if(target.classList.contains('sort')){
+                                // Has sort, toggle sort
+                                target.classList.toggle('sort_asc');
+                                target.classList.toggle('sort_desc');
+                            } else {
+                                // Didn't have sort
+                                if(tableHeader.querySelector('.sort')){
+                                    tableHeader.querySelector('.sort').classList.remove('sort', 'sort_asc', 'sort_desc');
+                                }
+
+                                // Add sort
+                                target.classList.add('sort', 'sort_asc');
+                            }
+
+                            let key = target.dataset.key;
+                            let sort = 'asc';
+                            if(target.classList.contains('sort_desc')){
+                                sort = 'desc';
+                            }
+                            // Update storage
+                            localStorage.setItem( `${tableHeader.getAttribute('id')}-tableStarExpeditionParticipation-{{ $data->uuid }}`, JSON.stringify({
+                                'key': key,
+                                'sort': sort,
+                            }));
+
+                            setTimeout(() => {
+                                fetchData(1);
+                            }, 0);
+                        });
+                    });
+                }
+
+                setTimeout(() => {
+                    fetchData(1);
+                }, 0);
+            }
+        }
         const fetchData = (page = 1) => {
             if(document.getElementById('star_expedition-container')){
                 let button = null;
@@ -496,11 +567,30 @@
                     button.innerHTML = `<i class="fa-solid fa-spinner" data-animate="spin"></i> Loading`;
                 }
 
+                let sortKey = null;
+                let sortOrder = null;
+                let tableHeader = document.getElementById('table-header');
+                if(document.getElementById('pills-tab').querySelector('.nav-link.active').dataset.type === 'map'){
+                    tableHeader = document.getElementById('table_map-header');
+                }
+                if(tableHeader){
+                    if(tableHeader.querySelector('.sort')){
+                        sortKey = tableHeader.querySelector('.sort').dataset.key;
+                        sortOrder = 'asc';
+                        if(tableHeader.querySelector('.sort').classList.contains('sort_desc')){
+                            sortOrder = 'desc';
+                        }
+                    }
+                }
+
                 let url = new URL(`{{ route('s.json.game-mode.star-expedition.participant.list') }}`);
                 url.searchParams.append('star_expedition_id', '{{ $data->uuid }}');
                 url.searchParams.append('progress_type', document.getElementById('pills-tab').querySelector('.nav-link.active').dataset.type)
                 url.searchParams.append('page', page);
                 url.searchParams.append('limit', 30);
+                url.searchParams.append('sort', sortOrder);
+                url.searchParams.append('sort_key', sortKey);
+
                 fetch(url)
                     .then((response) => {
                         if(page === parseInt(1)){
@@ -633,12 +723,12 @@
             }
         }
         document.addEventListener('DOMContentLoaded', () => {
-            fetchData(1);
+            fetchOrder();
         });
 
         if(document.getElementById('pills-tab')){
             document.getElementById('pills-tab').addEventListener('shown.bs.tab', (e) => {
-                fetchData(1);
+                fetchOrder();
             });
         }
 
