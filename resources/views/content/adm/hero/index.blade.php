@@ -80,40 +80,41 @@
         <div class="col-12 col-lg-8">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title">List</h5>
+                    <h5 class="card-title">Filter</h5>
                 </div>
-                <div class="card-body tw__max-h-[405px] tw__overflow-y-auto">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title">Filter</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div class="form-group tw__mb-4 md:tw__mb-0">
+                                <label for="input_filter-faction_id">Faction</label>
+                                <select class="form-control" id="input_filter-faction_id" name="faction_id" placeholder="Search for Faction">
+                                    <option value="">Search for Faction</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group tw__mb-4 md:tw__mb-0">
-                                        <label for="input_filter-faction_id">Faction</label>
-                                        <select class="form-control" id="input_filter-faction_id" name="faction_id" placeholder="Search for Faction">
-                                            <option value="">Search for Faction</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group tw__mb-4 md:tw__mb-0">
-                                        <label for="input_filter-faction_id">Class</label>
-                                        <select class="form-control" id="input_filter-class_id" name="class_id" placeholder="Search for Class">
-                                            <option value="">Search for Class</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-group tw__mt-4 tw__mb-0">
-                                        <label>Name</label>
-                                        <input type="text" class="form-control" id="input_filter-name" placeholder="Hero Name">
-                                    </div>
-                                </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group tw__mb-4 md:tw__mb-0">
+                                <label for="input_filter-faction_id">Class</label>
+                                <select class="form-control" id="input_filter-class_id" name="class_id" placeholder="Search for Class">
+                                    <option value="">Search for Class</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group tw__mt-4 tw__mb-0">
+                                <label>Name</label>
+                                <input type="text" class="form-control" id="input_filter-name" placeholder="Hero Name">
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">List</h5>
+                </div>
+                <div class="card-body tw__max-h-[405px] tw__overflow-y-auto">
                     <div id="hero-container"></div>
                 </div>
                 <div class="card-footer">

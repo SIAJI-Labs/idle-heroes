@@ -63,7 +63,7 @@ class HeroController extends Controller
             'faction_id' => ['required', 'string', 'exists:'.$this->factionModel->getTable().',uuid'],
             'class_id' => ['required', 'string', 'exists:'.$this->classModel->getTable().',uuid'],
             'avatar' => ['nullable', 'mimes:jpg,jpeg,png,svg,gif,webp', 'max:500'],
-            'name' => ['string', 'max:191'],
+            'name' => ['string', 'max:191', 'unique:'.$this->heroModel->getTable().',name'],
         ]);
 
         \DB::transaction(function () use ($request) {
@@ -148,15 +148,16 @@ class HeroController extends Controller
             return $this->updateTenant($request, $id);
         }
 
+        $data = $this->heroModel->where(\DB::raw('BINARY `uuid`'), $id)
+            ->firstOrFail();
+
         $request->validate([
             'faction_id' => ['required', 'string', 'exists:'.$this->factionModel->getTable().',uuid'],
             'class_id' => ['required', 'string', 'exists:'.$this->classModel->getTable().',uuid'],
             'avatar' => ['nullable', 'mimes:jpg,jpeg,png,svg,gif,webp', 'max:500'],
-            'name' => ['string', 'max:191'],
+            'name' => ['string', 'max:191', 'unique:'.$this->heroModel->getTable().',name,'.$data->id],
         ]);
 
-        $data = $this->heroModel->where(\DB::raw('BINARY `uuid`'), $id)
-            ->firstOrFail();
         \DB::transaction(function () use ($request, $data) {
             $avatar = $data->avatar;
             if ($request->hasFile('avatar') && ! empty($request->avatar)) {
