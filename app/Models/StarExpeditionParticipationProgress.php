@@ -103,9 +103,9 @@ class StarExpeditionParticipationProgress extends Model
                     $timezone = ($model->timezone_offset ?? env('APP_TIMEZONE_OFFSET', 0));
                     // Convert to UTC
                     $utc = convertToUtc($raw, $timezone);
-                    $datetime = date('Y-m-d H:i:00', strtotime($utc));
+                    $datetime = date('Y-m-d H:i:s', strtotime($utc));
                     $date = date('Y-m-d', strtotime($utc));
-                    $time = date('H:i:00', strtotime($utc));
+                    $time = date('H:i:s', strtotime($utc));
                     // Set Date
                     $model->value = $datetime;
                 }
