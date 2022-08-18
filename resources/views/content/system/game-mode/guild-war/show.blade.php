@@ -142,7 +142,9 @@
                 <table class="table table-hover table-striped table-bordered tw__mb-0">
                     <thead>
                         <tr id="table-header">
+                            <th class=" tw__cursor-pointer">#</th>
                             <th data-key="guildMember.player.name" class=" tw__cursor-pointer">Member</th>
+                            <th data-key="sum_progress" class=" tw__text-center tw__cursor-pointer">Sum</th>
                             <th data-key="day_1" class=" tw__text-center tw__cursor-pointer">Day 1</th>
                             <th data-key="day_2" class=" tw__text-center tw__cursor-pointer">Day 2</th>
                             <th data-key="day_3" class=" tw__text-center tw__cursor-pointer">Day 3</th>
@@ -153,9 +155,21 @@
                     </thead>
                     <tbody id="guild_war-container">
                         <tr>
-                            <td class=" tw__text-center" colspan="7">No available data</td>
+                            <td class=" tw__text-center" colspan="9">No available data</td>
                         </tr>
                     </tbody>
+                    <tfoot id="table-footer">
+                        <tr>
+                            <th colspan="2">Missing</th>
+                            <th data-key="sum_progress">-</th>
+                            <th data-key="day_1">-</th>
+                            <th data-key="day_2">-</th>
+                            <th data-key="day_3">-</th>
+                            <th data-key="day_4">-</th>
+                            <th data-key="day_5">-</th>
+                            <th data-key="day_6">-</th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -392,7 +406,7 @@
             console.log("Fetch Order");
             let tableHeader = document.getElementById('table-header');
             if(tableHeader){
-                let firstChild = tableHeader.firstElementChild;
+                let firstChild = tableHeader.querySelector('[data-key]');
                 let key = firstChild.dataset.key;
                 let sort = 'asc';
                 let el = firstChild;
@@ -413,8 +427,8 @@
                 el.classList.add('sort', `sort_${sort}`);
 
                 // Add Event Listener
-                if((tableHeader.querySelectorAll('th')).length > 0){
-                    tableHeader.querySelectorAll('th').forEach((el) => {
+                if((tableHeader.querySelectorAll('th[data-key]')).length > 0){
+                    tableHeader.querySelectorAll('th[data-key]').forEach((el) => {
                         el.addEventListener('click', (thEl) => {
                             let target = thEl.target;
                             console.log(target);
@@ -503,6 +517,7 @@
                         let content = document.createElement('tr');
 
                         if(data.length > 0){
+                            let missing = {'sum_progress': 0, 'day_1': 0, 'day_2': 0, 'day_3': 0, 'day_4': 0, 'day_5': 0, 'day_6': 0, };
                             data.forEach((val, index) => {
                                 content.setAttribute('data-uuid', val.uuid);
 
@@ -515,8 +530,13 @@
                                             <span>${numberFormat(progress, null)}</span>
                                         </td>
                                     `);
+
+                                    if(progress <= 0){
+                                        missing[`day_${ci}`] += 1;
+                                    }
                                 });
                                 content.innerHTML = `
+                                    <td>${index+1}</td>
                                     <td>
                                         <div class=" tw__flex tw__gap-1 tw__flex-col">
                                             <div class="tw__flex tw__items-center tw__gap-1">
@@ -526,14 +546,33 @@
                                             ${val.guild_member.player.player_identifier ? `<small class="">(#${val.guild_member.player.player_identifier})</small>` : ''}
                                         </div>    
                                     </td>
+                                    <td>${numberFormat(val.sum_progress, null)}</td>
                                     ${progressList.join('')}
                                 `;
                                 container.appendChild(content);
                                 content = document.createElement('tr');
+
+                                if(val.sum_progress <= 0){
+                                    missing[`sum_progress`] += 1;
+                                }
                             });
+
+                            // console.log(missing);
+                            let tableFooter = document.getElementById('table-footer');
+                            if(tableFooter){
+                                if(tableFooter.querySelector('th[data-key="sum_progress"]')){
+                                    tableFooter.querySelector('th[data-key="sum_progress"]').innerHTML = numberFormat(missing['sum_progress'], null);
+                                }
+                                let progressIndex = ['1', '2', '3', '4', '5', '6'];
+                                progressIndex.forEach((ci, ciindex) => {
+                                    if(tableFooter.querySelector(`th[data-key="day_${ci}"]`)){
+                                        tableFooter.querySelector(`th[data-key="day_${ci}"]`).innerHTML = numberFormat(missing[`day_${ci}`], null);
+                                    }
+                                });
+                            }
                         } else {
                             content.innerHTML = `
-                                <td colspan="7" class="tw__text-center">No available data</td>
+                                <td colspan="9" class="tw__text-center">No available data</td>
                             `;
 
                             container.appendChild(content);

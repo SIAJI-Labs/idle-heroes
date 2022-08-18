@@ -249,6 +249,7 @@ class StarExpeditionParticipationController extends Controller
         }
 
         $final = $data->get()->map(function($data) use ($request){
+            $data->sum_progress = 0;
             if($request->has('progress_type') && $request->progress_type === 'map'){
                 $maps = [1, 2, 3, 4, 5, 6, 7];
                 foreach($maps as $map){
@@ -259,6 +260,8 @@ class StarExpeditionParticipationController extends Controller
                 $days = [1, 2, 3, 4, 5, 6];
                 foreach($days as $day){
                     $data['day_'.$day] = !empty($data->getProgress('day_'.$day)) ? $data->getProgress('day_'.$day) : null;
+
+                    $data->sum_progress += !empty($data['day_'.$day]) ? $data['day_'.$day] : 0;
                 }
             }
 

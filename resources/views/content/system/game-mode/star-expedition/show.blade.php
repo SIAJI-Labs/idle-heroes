@@ -153,7 +153,9 @@
                         <table class="table table-hover table-striped table-bordered tw__mb-0">
                             <thead>
                                 <tr id="table-header">
+                                    <th class=" tw__cursor-pointer">#</th>
                                     <th data-key="guildMember.player.name" class=" tw__cursor-pointer">Member</th>
+                                    <th data-key="sum_progress" class=" tw__text-center tw__cursor-pointer">Sum</th>
                                     <th data-key="day_1" class=" tw__text-center tw__cursor-pointer">Day 1</th>
                                     <th data-key="day_2" class=" tw__text-center tw__cursor-pointer">Day 2</th>
                                     <th data-key="day_3" class=" tw__text-center tw__cursor-pointer">Day 3</th>
@@ -164,9 +166,21 @@
                             </thead>
                             <tbody id="star_expedition-container">
                                 <tr>
-                                    <td class=" tw__text-center" colspan="7">No available data</td>
+                                    <td class=" tw__text-center" colspan="9">No available data</td>
                                 </tr>
                             </tbody>
+                            <tfoot id="table-footer">
+                                <tr>
+                                    <th colspan="2">Missing</th>
+                                    <th data-key="sum_progress">-</th>
+                                    <th data-key="day_1">-</th>
+                                    <th data-key="day_2">-</th>
+                                    <th data-key="day_3">-</th>
+                                    <th data-key="day_4">-</th>
+                                    <th data-key="day_5">-</th>
+                                    <th data-key="day_6">-</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -175,7 +189,9 @@
                         <table class="table table-hover table-striped table-bordered tw__mb-0">
                             <thead>
                                 <tr id="table_map-header">
+                                    <th class=" tw__cursor-pointer">#</th>
                                     <th data-key="guildMember.player.name" class=" tw__cursor-pointer">Member</th>
+                                    <th data-key="map_1" class=" tw__text-center tw__cursor-pointer">Cleared All</th>
                                     <th data-key="map_1" class=" tw__text-center tw__cursor-pointer">Map 1</th>
                                     <th data-key="map_2" class=" tw__text-center tw__cursor-pointer">Map 2</th>
                                     <th data-key="map_3" class=" tw__text-center tw__cursor-pointer">Map 3</th>
@@ -187,9 +203,22 @@
                             </thead>
                             <tbody id="star_expedition_map-container">
                                 <tr>
-                                    <td class=" tw__text-center" colspan="8">No available data</td>
+                                    <td class=" tw__text-center" colspan="10">No available data</td>
                                 </tr>
                             </tbody>
+                            <tfoot id="table_map-footer">
+                                <tr>
+                                    <th colspan="2">Missing</th>
+                                    <th data-key="cleared_all">-</th>
+                                    <th data-key="map_1">-</th>
+                                    <th data-key="map_2">-</th>
+                                    <th data-key="map_3">-</th>
+                                    <th data-key="map_4">-</th>
+                                    <th data-key="map_5">-</th>
+                                    <th data-key="map_6">-</th>
+                                    <th data-key="map_7">-</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -448,6 +477,32 @@
                             el.closest('td').querySelector('.confirmed').remove();
                         }
                     }
+
+                    // Check Available Map
+                    let availableMap = document.querySelectorAll(`input[type="checkbox"][data-participant="${el.dataset.participant}"].se-map-checkbox`).length;
+                    let clearedMap = document.querySelectorAll(`input[type="checkbox"][data-participant="${el.dataset.participant}"].se-map-checkbox:checked`).length;
+                    let parentRow = document.querySelector(`tr[data-participant="${el.dataset.participant}"]`);
+                    if(parentRow){
+                        let clearedAllMapCheckbox = parentRow.querySelector('.se-map-cleared');
+                        if(clearedAllMapCheckbox){
+                            if(clearedMap === availableMap){
+                                // All Map Cleared
+                                clearedAllMapCheckbox.checked = true;
+                            } else {
+                                // Not yet cleared
+                                clearedAllMapCheckbox.checked = false;
+                            }
+
+                            tableFooter = document.getElementById('table_map-footer');
+                            if(tableFooter){
+                                if(tableFooter.querySelector('th[data-key="cleared_all"]')){
+                                    let available = document.querySelectorAll('input[type="checkbox"].se-map-cleared').length;
+                                    let clearedAll = document.querySelectorAll('input[type="checkbox"].se-map-cleared:checked').length;
+                                    tableFooter.querySelector('th[data-key="cleared_all"]').innerHTML = numberFormat(available - clearedAll, null);
+                                }
+                            }
+                        }
+                    }
                 }
             });;
         }
@@ -474,7 +529,7 @@
             }
 
             if(tableHeader){
-                let firstChild = tableHeader.firstElementChild;
+                let firstChild = tableHeader.querySelector('[data-key]');
                 let key = firstChild.dataset.key;
                 let sort = 'asc';
                 let el = firstChild;
@@ -495,11 +550,10 @@
                 el.classList.add('sort', `sort_${sort}`);
 
                 // Add Event Listener
-                if((tableHeader.querySelectorAll('th')).length > 0){
-                    tableHeader.querySelectorAll('th').forEach((el) => {
+                if((tableHeader.querySelectorAll('th[data-key]')).length > 0){
+                    tableHeader.querySelectorAll('th[data-key]').forEach((el) => {
                         el.addEventListener('click', (thEl) => {
                             let target = thEl.target;
-                            console.log(target);
                             // Check if current target has sort class
                             if(target.classList.contains('sort')){
                                 // Has sort, toggle sort
@@ -550,13 +604,13 @@
                     if(document.getElementById('pills-tab').querySelector('.nav-link.active').dataset.type === 'map'){
                         container.innerHTML = `
                             <tr>
-                                <td class=" tw__text-center" colspan="8">Loading...</td>
+                                <td class=" tw__text-center" colspan="10">Loading...</td>
                             </tr>
                         `;
                     } else if(document.getElementById('pills-tab').querySelector('.nav-link.active').dataset.type === 'point'){
                         container.innerHTML = `
                             <tr>
-                                <td class=" tw__text-center" colspan="7">Loading...</td>
+                                <td class=" tw__text-center" colspan="9">Loading...</td>
                             </tr>
                         `;
                     }
@@ -570,8 +624,10 @@
                 let sortKey = null;
                 let sortOrder = null;
                 let tableHeader = document.getElementById('table-header');
+                let tableFooter = document.getElementById('table-footer')
                 if(document.getElementById('pills-tab').querySelector('.nav-link.active').dataset.type === 'map'){
                     tableHeader = document.getElementById('table_map-header');
+                    tableFooter = document.getElementById('table_map-footer');
                 }
                 if(tableHeader){
                     if(tableHeader.querySelector('.sort')){
@@ -607,9 +663,10 @@
                         if(document.getElementById('pills-tab').querySelector('.nav-link.active').dataset.type === 'map'){
                             content = document.createElement('tr');
                             if(data.length > 0){
+                                let missing = {map_1: 0, map_2: 0, map_3: 0, map_4: 0, map_5: 0, map_6: 0, map_7: 0};
                                 data.forEach((val, index) => {
                                     // console.log(val);
-
+                                    let participantClearedAll = 0;
                                     content.setAttribute('data-participant', val.uuid);
                                     content.setAttribute('id', `participant_row-${index}`);
 
@@ -622,6 +679,9 @@
                                             extra = `
                                                 <small class="confirmed text-muted tw__italic">*Confirmed at ${momentDateTime(progressDate, 'ddd DD MMM, YYYY HH:mm', true)}</small>
                                             `;
+                                            participantClearedAll += 1;
+                                        } else {
+                                            missing[`map_${ci}`] += 1;
                                         }
 
                                         checkbox.push(`
@@ -638,6 +698,7 @@
                                     });
 
                                     content.innerHTML = `
+                                        <td>${index + 1}</td>
                                         <td>
                                             <div class=" tw__flex tw__gap-1 tw__flex-col">
                                                 <div class="tw__flex tw__items-center tw__gap-1">
@@ -646,6 +707,11 @@
                                                 </div>
                                                 ${val.guild_member.player.player_identifier ? `<small class="">(#${val.guild_member.player.player_identifier})</small>` : ''}
                                             </div>    
+                                        </td>
+                                        <td>
+                                            <div class="form-check tw__mb-0 tw__flex tw__justify-center">
+                                                <input class="form-check-input se-map-cleared" type="checkbox" data-participant="${val.uuid}" onclick="return false;" ${participantClearedAll === checkboxIndex.length ? 'checked' : ''}>
+                                            </div>
                                         </td>
                                         ${checkbox.join('')}
                                     `;
@@ -662,15 +728,29 @@
                                     // }
                                 });
 
+                                if(tableFooter){
+                                    if(tableFooter.querySelector('th[data-key="cleared_all"]')){
+                                        let available = document.querySelectorAll('input[type="checkbox"].se-map-cleared').length;
+                                        let clearedAll = document.querySelectorAll('input[type="checkbox"].se-map-cleared:checked').length;
+                                        tableFooter.querySelector('th[data-key="cleared_all"]').innerHTML = numberFormat(available - clearedAll, null);
+                                    }
+                                    let progressIndex = ['1', '2', '3', '4', '5', '6', '7'];
+                                    progressIndex.forEach((ci, ciindex) => {
+                                        if(tableFooter.querySelector(`th[data-key="map_${ci}"]`)){
+                                            tableFooter.querySelector(`th[data-key="map_${ci}"]`).innerHTML = numberFormat(missing[`map_${ci}`], null);
+                                        }
+                                    });
+                                }
                             } else {
                                 content.innerHTML = `
-                                    <td class=" tw__text-center" colspan="8">No available data</td>
+                                    <td class=" tw__text-center" colspan="9">No available data</td>
                                 `;
 
                                 container.appendChild(content);
                             }
                         } else if(document.getElementById('pills-tab').querySelector('.nav-link.active').dataset.type === 'point'){
                             if(data.length > 0){
+                                let missing = {sum_progress: 0, day_1: 0, day_2: 0, day_3: 0, day_4: 0, day_5: 0, day_6: 0};
                                 data.forEach((val, index) => {
                                     content.setAttribute('data-uuid', val.uuid);
 
@@ -683,8 +763,13 @@
                                                 <span>${numberFormat(progress, null)}</span>
                                             </td>
                                         `);
+
+                                        if(progress <= 0){
+                                            missing[`day_${ci}`] += 1;
+                                        }
                                     });
                                     content.innerHTML = `
+                                        <td>${index+1}</td>
                                         <td>
                                             <div class=" tw__flex tw__gap-1 tw__flex-col">
                                                 <div class="tw__flex tw__items-center tw__gap-1">
@@ -694,14 +779,31 @@
                                                 ${val.guild_member.player.player_identifier ? `<small class="">(#${val.guild_member.player.player_identifier})</small>` : ''}
                                             </div>    
                                         </td>
+                                        <td>${numberFormat(val.sum_progress, null)}</td>
                                         ${progressList.join('')}
                                     `;
                                     container.appendChild(content);
                                     content = document.createElement('tr');
+
+                                    if(val.sum_progress <= 0){
+                                        missing[`sum_progress`] += 1;
+                                    }
                                 });
+
+                                if(tableFooter){
+                                    if(tableFooter.querySelector('th[data-key="sum_progress"]')){
+                                        tableFooter.querySelector('th[data-key="sum_progress"]').innerHTML = numberFormat(missing['sum_progress'], null);
+                                    }
+                                    let progressIndex = ['1', '2', '3', '4', '5', '6'];
+                                    progressIndex.forEach((ci, ciindex) => {
+                                        if(tableFooter.querySelector(`th[data-key="day_${ci}"]`)){
+                                            tableFooter.querySelector(`th[data-key="day_${ci}"]`).innerHTML = numberFormat(missing[`day_${ci}`], null);
+                                        }
+                                    });
+                                }
                             } else {
                                 content.innerHTML = `
-                                    <td colspan="7" class="tw__text-center">No available data</td>
+                                    <td colspan="9" class="tw__text-center">No available data</td>
                                 `;
 
                                 container.appendChild(content);
